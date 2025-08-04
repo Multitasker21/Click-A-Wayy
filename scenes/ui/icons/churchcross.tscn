@@ -1,0 +1,125 @@
+[gd_scene load_steps=9 format=3 uid="uid://dydim6e3dckv5"]
+
+[ext_resource type="Texture2D" uid="uid://c43g1c8ecwd4l" path="res://assets/lights/circle.png" id="1_ymirv"]
+[ext_resource type="Texture2D" uid="uid://dsnmtc54kwxhp" path="res://assets/tilesets/Statues.png" id="2_ymirv"]
+[ext_resource type="Texture2D" uid="uid://t6uhtwn4wann" path="res://assets/tilesets/WallsOutline.png" id="3_16iue"]
+[ext_resource type="Script" uid="uid://p4jcboxx4hu0" path="res://scenes/ui/icons/Drum.cs" id="3_scn35"]
+
+[sub_resource type="Animation" id="Animation_lpr6u"]
+resource_name = "Light"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [4.0, 11.06, 4.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Outline:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(12, 12), Vector2(8, 8), Vector2(12, 12)]
+}
+
+[sub_resource type="Animation" id="Animation_up4p2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [4.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Outline:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(12, 12)]
+}
+
+[sub_resource type="Animation" id="Animation_yln78"]
+resource_name = "reset"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [4.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Outline:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(12, 12)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_83vsj"]
+_data = {
+&"Light": SubResource("Animation_lpr6u"),
+&"RESET": SubResource("Animation_up4p2"),
+&"reset": SubResource("Animation_yln78")
+}
+
+[node name="Churchcross" type="PanelContainer"]
+custom_minimum_size = Vector2(100, 100)
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_scn35")
+
+[node name="Statues" type="Sprite2D" parent="."]
+position = Vector2(50, 48)
+scale = Vector2(2, 2)
+texture = ExtResource("2_ymirv")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(50, 50)
+scale = Vector2(4, 4)
+energy = 4.0
+texture = ExtResource("1_ymirv")
+texture_scale = 0.03
+
+[node name="Outline" type="Sprite2D" parent="."]
+self_modulate = Color(2.5028e-06, 0.744232, 0.80902, 1)
+position = Vector2(50, 50)
+scale = Vector2(12, 12)
+texture = ExtResource("3_16iue")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_83vsj")
+}

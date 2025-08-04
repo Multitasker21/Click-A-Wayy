@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://dfgkn6do6m4yk"]
+
+[ext_resource type="Texture2D" uid="uid://b5lsnp6i38sy8" path="res://assets/objects/Drum.png" id="1_1pk3m"]
+[ext_resource type="Texture2D" uid="uid://c43g1c8ecwd4l" path="res://assets/lights/circle.png" id="2_pdc8q"]
+
+[node name="Button" type="Button"]
+custom_minimum_size = Vector2(100, 100)
+offset_right = 8.0
+offset_bottom = 8.0
+icon = ExtResource("1_1pk3m")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(50, 50)
+scale = Vector2(4, 4)
+energy = 4.66
+texture = ExtResource("2_pdc8q")
+texture_scale = 0.03

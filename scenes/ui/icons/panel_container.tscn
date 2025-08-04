@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://dbmwmebsctfs5"]
+
+[node name="Drum" type="PanelContainer"]
+modulate = Color(1, 3.315, 5.525, 0.354)
+custom_minimum_size = Vector2(100, 100)
+offset_right = 40.0
+offset_bottom = 40.0

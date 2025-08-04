@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6qn2eu3g82eh"]
+
+[ext_resource type="PackedScene" uid="uid://b1qvdbpf6m6u" path="res://scenes/ui/icons/drum.tscn" id="1_sp33w"]
+
+[node name="test" type="Node2D"]
+
+[node name="Drum" parent="." instance=ExtResource("1_sp33w")]

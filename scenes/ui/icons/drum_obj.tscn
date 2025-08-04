@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://bge8ghfvn8lce"]
+
+[ext_resource type="Texture2D" uid="uid://b5lsnp6i38sy8" path="res://assets/objects/Drum.png" id="1_s5gpn"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_orpdp"]
+texture = ExtResource("1_s5gpn")
+texture_region_size = Vector2i(8, 8)
+0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_5dxes"]
+tile_size = Vector2i(8, 8)
+sources/0 = SubResource("TileSetAtlasSource_orpdp")
+
+[node name="DrumObj" type="TileMapLayer"]
+tile_map_data = PackedByteArray(0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 255, 255, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0)
+tile_set = SubResource("TileSet_5dxes")

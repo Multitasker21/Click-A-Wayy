@@ -1,0 +1,166 @@
+[gd_scene load_steps=14 format=4 uid="uid://dv86fwvf6qlt7"]
+
+[ext_resource type="Script" uid="uid://b0wmjr020uejg" path="res://scenes/levels/TileHoverScene.cs" id="1_jmsp1"]
+[ext_resource type="Texture2D" uid="uid://t6uhtwn4wann" path="res://assets/tilesets/WallsOutline.png" id="2_jmsp1"]
+[ext_resource type="Texture2D" uid="uid://b5lsnp6i38sy8" path="res://assets/objects/Drum.png" id="2_js67s"]
+[ext_resource type="Texture2D" uid="uid://dwk7hwfxjpuqv" path="res://assets/objects/Goal.png" id="2_tgbqm"]
+[ext_resource type="TileSet" uid="uid://d14pcms5qm31n" path="res://scenes/levels/tile_hover_scene.tres" id="2_vee43"]
+[ext_resource type="Texture2D" uid="uid://dsnmtc54kwxhp" path="res://assets/tilesets/Statues.png" id="4_mijjg"]
+[ext_resource type="PackedScene" uid="uid://b1qvdbpf6m6u" path="res://scenes/ui/icons/drum.tscn" id="4_vee43"]
+[ext_resource type="Texture2D" uid="uid://cxo0u4gs2vgqi" path="res://assets/objects/DrumBroken2.png" id="6_mijjg"]
+[ext_resource type="PackedScene" uid="uid://dydim6e3dckv5" path="res://scenes/ui/icons/churchcross.tscn" id="8_1jww8"]
+[ext_resource type="PackedScene" uid="uid://c2r2l65elurer" path="res://scenes/player/player.tscn" id="9_53jq1"]
+[ext_resource type="Script" uid="uid://df1njekq4jknl" path="res://scenes/levels/NeuralVisualizer.cs" id="9_y5shd"]
+[ext_resource type="FontFile" uid="uid://h3i0erd3a5wi" path="res://assets/fonts/Square.ttf" id="11_tpvsj"]
+
+[sub_resource type="Theme" id="Theme_vee43"]
+
+[node name="TileHoverScene" type="Node2D" node_paths=PackedStringArray("TileMapLayer", "TileMapLayerNav", "TileMap", "HoverSpriteTemplate", "TargetSpriteTemplate", "BlockedSpriteTemplate", "Goal")]
+script = ExtResource("1_jmsp1")
+TileMapLayer = NodePath("Layer0")
+TileMapLayerNav = NodePath("Layer1")
+TileMap = NodePath("TileMap")
+HoverSpriteTemplate = NodePath("WallsOutline")
+TargetSpriteTemplate = NodePath("WallsOutline2")
+BlockedSpriteTemplate = NodePath("WallsOutline3")
+Goal = NodePath("Goal")
+
+[node name="Layer1" type="TileMapLayer" parent="."]
+use_parent_material = true
+position = Vector2(576, 324)
+tile_map_data = PackedByteArray("AAD4//v/AwACAAIAAAD5//v/AwADAAIAAAD6//v/AwAEAAIAAAD7//v/AwAFAAIAAAD8//v/AwAGAAIAAAD9//v/AwAHAAIAAAD+//v/AwACAAIAAAD///v/AwADAAIAAAAAAPv/AwAEAAIAAAABAPv/AwAFAAIAAAACAPv/AwAGAAIAAAADAPv/AwAHAAIAAAAEAPv/AwACAAIAAAAFAPv/AwADAAIAAAAGAPv/AwAEAAIAAAAHAPv/AwAHAAIAAAD4//z/AwACAAMAAAD4//3/AwACAAQAAAD4//7/AwACAAUAAAD4////AwACAAYAAAD4/wAAAwACAAcAAAD4/wEAAwACAAMAAAD4/wIAAwACAAQAAAD4/wMAAwACAAUAAAD5/wMAAwADAAcAAAD6/wMAAwAEAAcAAAD7/wMAAwAFAAcAAAD8/wMAAwAGAAcAAAD9/wMAAwAHAAcAAAD+/wMAAwADAAcAAAD//wMAAwAEAAcAAAAAAAMAAwAFAAcAAAABAAMAAwAGAAcAAAACAAMAAwAHAAcAAAADAAMAAwADAAcAAAAEAAMAAwAEAAcAAAAFAAMAAwAFAAcAAAAGAAMAAwAGAAcAAAAHAAMAAwAHAAcAAAAHAPz/AwAHAAMAAAAHAP3/AwAHAAQAAAAHAP7/AwAHAAUAAAAHAP//AwAHAAYAAAAHAAAAAwAHAAcAAAAHAAEAAwAHAAIAAAAHAAIAAwAHAAMAAAD5//z/AwADAAMAAAD6//z/AwAEAAMAAAD7//z/AwAFAAMAAAD8//z/AwAGAAMAAAD9//z/AwADAAMAAAD+//z/AwAEAAMAAAD///z/AwAFAAMAAAAAAPz/AwAGAAMAAAABAPz/AwADAAMAAAACAPz/AwAEAAMAAAADAPz/AwAFAAMAAAAEAPz/AwAGAAMAAAAFAPz/AwADAAMAAAAGAPz/AwAEAAMAAAD5/wIAAwADAAYAAAD6/wIAAwAEAAYAAAD7/wIAAwAFAAYAAAD8/wIAAwAGAAYAAAD9/wIAAwADAAYAAAD+/wIAAwAEAAYAAAD//wIAAwAFAAYAAAAAAAIAAwAGAAYAAAABAAIAAwADAAYAAAACAAIAAwAEAAYAAAADAAIAAwAFAAYAAAAEAAIAAwAGAAYAAAAFAAIAAwADAAYAAAAGAAIAAwAEAAYAAAD5//3/AwADAAQAAAD5//7/AwADAAUAAAD5////AwADAAQAAAD5/wAAAwADAAUAAAD5/wEAAwADAAQAAAD6//3/AwADAAQAAAD6//7/AwADAAUAAAD6////AwADAAQAAAD6/wAAAwADAAUAAAD6/wEAAwADAAQAAAD7//3/AwADAAQAAAD7//7/AwADAAUAAAD7////AwADAAQAAAD7/wAAAwADAAUAAAD7/wEAAwADAAQAAAD8//3/AwADAAQAAAD8//7/AwADAAUAAAD8////AwADAAQAAAD8/wAAAwADAAUAAAD8/wEAAwADAAQAAAD9//3/AwADAAQAAAD9//7/AwADAAUAAAD9////AwADAAQAAAD9/wAAAwADAAUAAAD9/wEAAwADAAQAAAD+//3/AwADAAQAAAD+//7/AwADAAUAAAD+////AwADAAQAAAD+/wAAAwADAAUAAAD+/wEAAwADAAQAAAD///3/AwADAAQAAAD///7/AwADAAUAAAD/////AwADAAQAAAD//wAAAwADAAUAAAD//wEAAwADAAQAAAAAAP3/AwADAAQAAAAAAP7/AwADAAUAAAAAAP//AwADAAQAAAAAAAAAAwADAAUAAAAAAAEAAwADAAQAAAABAP3/AwADAAQAAAABAP7/AwADAAUAAAABAP//AwADAAQAAAABAAAAAwADAAUAAAABAAEAAwADAAQAAAACAP3/AwADAAQAAAACAP7/AwADAAUAAAACAP//AwADAAQAAAACAAAAAwADAAUAAAACAAEAAwADAAQAAAADAP3/AwADAAQAAAADAP7/AwADAAUAAAADAP//AwADAAQAAAADAAAAAwADAAUAAAADAAEAAwADAAQAAAAEAP3/AwADAAQAAAAEAP7/AwADAAUAAAAEAP//AwADAAQAAAAEAAAAAwADAAUAAAAEAAEAAwADAAQAAAAFAP3/AwADAAQAAAAFAP7/AwADAAUAAAAFAP//AwADAAQAAAAFAAAAAwADAAUAAAAFAAEAAwADAAQAAAAGAP3/AwADAAQAAAAGAP7/AwADAAUAAAAGAP//AwADAAQAAAAGAAAAAwADAAUAAAAGAAEAAwADAAQAAAA=")
+tile_set = ExtResource("2_vee43")
+
+[node name="Goal" type="Sprite2D" parent="."]
+position = Vector2(620, 344)
+texture = ExtResource("2_tgbqm")
+
+[node name="Target" type="Marker2D" parent="Goal"]
+
+[node name="Layer0" type="TileMapLayer" parent="."]
+use_parent_material = true
+position = Vector2(576, 324)
+tile_map_data = PackedByteArray("AAD6//3/AQAAAAAAAAD6//7/AQAAAAAAAAD6////AQAAAAAAAAD6/wAAAQAAAAAAAAD6/wEAAQAAAAAAAAD6/wIAAQAAAAAAAAD7//3/AQAAAAAAAAD7/wIAAQAAAAAAAAD8//3/AQAAAAAAAAD8/wIAAQAAAAAAAAD9//3/AQAAAAAAAAD9/wIAAQAAAAAAAAD+//3/AQAAAAAAAAD+/wIAAQAAAAAAAAD///3/AQAAAAAAAAD///7/AQAAAAAAAAD/////AQAAAAAAAAD//wAAAQAAAAAAAAD//wIAAQAAAAAAAAAAAP3/AQAAAAAAAAAAAAIAAQAAAAAAAAABAP3/AQAAAAAAAAABAAIAAQAAAAAAAAACAP3/AQAAAAAAAAACAAIAAQAAAAAAAAADAP3/AQAAAAAAAAADAAEAAQAAAAAAAAADAAIAAQAAAAAAAAAEAP3/AQAAAAAAAAAEAAIAAQAAAAAAAAAEAAMAAQAAAAAAAAAFAP3/AQAAAAAAAAAFAAMAAQAAAAAAAAAGAP3/AQAAAAAAAAAGAP7/AQAAAAAAAAAGAP//AQAAAAAAAAAGAAAAAQAAAAAAAAAGAAEAAQAAAAAAAAAGAAIAAQAAAAAAAAAGAAMAAQAAAAAAAAA=")
+tile_set = ExtResource("2_vee43")
+
+[node name="TileMap" type="TileMap" parent="."]
+position = Vector2(576, 324)
+tile_set = ExtResource("2_vee43")
+format = 2
+
+[node name="WallsOutline" type="Sprite2D" parent="."]
+position = Vector2(576, 324)
+texture = ExtResource("2_jmsp1")
+
+[node name="WallsOutline2" type="Sprite2D" parent="."]
+self_modulate = Color(0.545853, 0.953156, 0, 1)
+position = Vector2(576, 324)
+texture = ExtResource("2_jmsp1")
+
+[node name="ColorRect" type="ColorRect" parent="WallsOutline2"]
+self_modulate = Color(0.0464239, 0.576101, 0.0395069, 0.199)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WallsOutline3" type="Sprite2D" parent="."]
+self_modulate = Color(25.414, 0.008, 0, 1)
+position = Vector2(576, 324)
+texture = ExtResource("2_jmsp1")
+
+[node name="ColorRect" type="ColorRect" parent="WallsOutline3"]
+self_modulate = Color(0.890595, 0.0619936, 0.0370314, 0.21)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PlacableObstacle" type="Node2D" parent="."]
+
+[node name="Statues" type="Sprite2D" parent="PlacableObstacle"]
+position = Vector2(289, 159)
+texture = ExtResource("4_mijjg")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="PlacableObstacle/Statues"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PlacableObstacle/Statues/StaticBody2D"]
+polygon = PackedVector2Array(-2, -16, -2, -15, -3, -15, -3, -14, -4, -14, -4, -10, -6, -10, -6, -9, -18, -9, -18, -5, -15, -5, -15, -4, -14, -4, -14, -3, -12, -3, -12, -2, -9, -2, -9, -1, -3, -1, -3, 0, -4, 0, -4, 7, -3, 7, -3, 8, -4, 8, -4, 13, -5, 13, -5, 17, -4, 17, -4, 18, -5, 18, -5, 20, 5, 20, 5, 18, 4, 18, 4, 17, 5, 17, 5, 13, 4, 13, 4, 8, 3, 8, 3, 7, 4, 7, 4, 0, 3, 0, 3, -1, 9, -1, 9, -2, 12, -2, 12, -3, 14, -3, 14, -4, 15, -4, 15, -5, 18, -5, 18, -9, 6, -9, 6, -10, 4, -10, 4, -14, 3, -14, 3, -15, 2, -15, 2, -16)
+
+[node name="Drum" type="Sprite2D" parent="PlacableObstacle"]
+position = Vector2(431, 252)
+texture = ExtResource("2_js67s")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="PlacableObstacle/Drum"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PlacableObstacle/Drum/StaticBody2D"]
+polygon = PackedVector2Array(-3, -7, -4, -6, -5, -5, -6, -3, -6, 4, -5, 7, -4, 8, 5, 8, 6, 7, 7, 4, 7, -3, 6, -5, 5, -6, 4, -7)
+
+[node name="DrumBroken2" type="Sprite2D" parent="PlacableObstacle"]
+position = Vector2(294, 125)
+texture = ExtResource("6_mijjg")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(576, 324)
+zoom = Vector2(5, 5)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+process_physics_priority = 1
+layer = 0
+
+[node name="NeuralVisualizer" type="Control" parent="CanvasLayer"]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -250.0
+offset_right = 250.0
+offset_bottom = 300.0
+grow_horizontal = 2
+scale = Vector2(1, 0.68)
+script = ExtResource("9_y5shd")
+CustomFont = ExtResource("11_tpvsj")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer"]
+custom_minimum_size = Vector2(100, 0)
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -141.0
+offset_top = -211.0
+offset_right = -41.0
+offset_bottom = 205.0
+grow_horizontal = 0
+grow_vertical = 2
+theme = SubResource("Theme_vee43")
+
+[node name="Objectholder" type="VBoxContainer" parent="CanvasLayer/ScrollContainer"]
+layout_mode = 2
+
+[node name="Drum" parent="CanvasLayer/ScrollContainer/Objectholder" node_paths=PackedStringArray("DrumSpriteTemplate") instance=ExtResource("4_vee43")]
+layout_mode = 2
+TileHoverScenePath = NodePath("../../../..")
+DrumSpriteTemplate = NodePath("../../../../PlacableObstacle/Drum")
+
+[node name="Churchcross" parent="CanvasLayer/ScrollContainer/Objectholder" node_paths=PackedStringArray("DrumSpriteTemplate") instance=ExtResource("8_1jww8")]
+layout_mode = 2
+TileHoverScenePath = NodePath("../../../..")
+DrumSpriteTemplate = NodePath("../../../../PlacableObstacle/Statues")
+
+[node name="Player" parent="." instance=ExtResource("9_53jq1")]
+position = Vector2(542, 331)
+TargetPath = NodePath("../Goal/Target")
+VisualizerPath = NodePath("../CanvasLayer/NeuralVisualizer")

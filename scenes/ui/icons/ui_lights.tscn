@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://cfvngwwbvofg1"]
+
+[ext_resource type="Texture2D" uid="uid://b5lsnp6i38sy8" path="res://assets/objects/Drum.png" id="1_t6i51"]
+[ext_resource type="Texture2D" uid="uid://c43g1c8ecwd4l" path="res://assets/lights/circle.png" id="1_thqp0"]
+
+[node name="UiLights" type="Node2D"]
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+scale = Vector2(4, 4)
+energy = 4.81
+texture = ExtResource("1_thqp0")
+texture_scale = 0.03
+
+[node name="Drum" type="Sprite2D" parent="."]
+position = Vector2(-2, -2)
+scale = Vector2(4, 4)
+texture = ExtResource("1_t6i51")

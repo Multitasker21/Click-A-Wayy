@@ -12,13 +12,17 @@ import time
 
 m.patch()
 
+# === CONFIG Flag for switching to local preview mode ===
+use_tkinter_preview = False  # <<< SET TO TRUE (preview only)
+
 # === Setuping a server ===
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(('127.0.0.1', 5050))
-server.listen(1) #Easily Hackable but IDFC Bank!!!!
-print("Waiting for connection...", flush=True)
-conn, _ = server.accept()
-print("Client connected!", flush=True)
+if not use_tkinter_preview:
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind(('127.0.0.1', 5050))
+    server.listen(1) #Easily Hackable but IDFC Bank!!!!
+    print("Waiting for connection...", flush=True)
+    conn, _ = server.accept()
+    print("Client connected!", flush=True)
 
 # === Camera Setp ===
 cap = cv2.VideoCapture(0)
@@ -35,6 +39,8 @@ hands = mp_hands.Hands(
     min_tracking_confidence=0.5,
     max_num_hands=2
 )
+draw = mp.solutions.drawing_utils
+
 
 # === Cursor Smoothing (Not that much good but works slightly better.. BY MY EXPERIENCEEEEE IDCCCC!!!! F*%k..UUUU!!!! IHATE.FING.PYYYYY) ===
 cursor_history = []
@@ -107,6 +113,8 @@ while True:
 
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
+            if use_tkinter_preview:
+                draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
             # Raw normalized landmarks needed for less cpu usage
             hand = [(lm.x, lm.y) for lm in hand_landmarks.landmark]
             all_hand_landmarks.append(hand)
@@ -160,6 +168,14 @@ while True:
             elif gesture == "Double Click" and now - last_click_time > click_delay:
                 pyautogui.doubleClick()
                 last_click_time = now
+
+    # === Mode: Local Preview Only ===
+    if use_tkinter_preview:
+        cv2.putText(frame, f"Gesture: {gesture}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+        cv2.imshow("Hand Gesture Preview", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+        continue
 
     # Encode frame to JPEG (Lighter and easier to bitmash thatswhy)
     _, buffer = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 40])

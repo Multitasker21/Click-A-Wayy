@@ -4,7 +4,7 @@ import numpy as np
 import time
 import util 
 import pyautogui
-import random
+import random # BRUHHHHH GO TO LINE 108 right now U madda$&!!!#$@%!@!!!
 
 # Screen size
 screen_width, screen_height = pyautogui.size()
@@ -105,7 +105,7 @@ def detect_gestures(frame, landmarks, processed):
             pyautogui.doubleClick()
             cv2.putText(frame, "Double Click", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
         elif is_screenshot(landmarks, thumb_index_dist):
-            label = random.randint(1, 1000)
+            label = random.randint(1, 1000) # WHY THE FUCK U DID THISSSS THIS CREATES SUCH A BIG LAG SPIKEEE U DIDN"T EVEN KNOW WHAT THE FUCK IT IS ACTUALLY DOING HEREEEE!!!!!!!!!!!!!!!!
             pyautogui.screenshot(f"screenshot_{label}.png")
             cv2.putText(frame, "Screenshot", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
 

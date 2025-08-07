@@ -144,26 +144,21 @@ public partial class NeuralVisualizer : Control
     }
 
     private void DrawWeightedLine(Vector2 from, Vector2 to, float weight)
-{
-    float absWeight = Mathf.Abs(weight);
-
-    // 🎨 Vibrant colors
-    Color color = weight > 0
-        ? new Color(0.2f, 1f, 0.2f) // Bright green
-        : new Color(1f, 0.2f, 0.2f); // Bright red
-
-    // 💡 Enhanced alpha and glow
-    color.A = Mathf.Clamp(Mathf.Pow(absWeight, 0.8f), 0.4f, 1f); // more nonlinear vividness
-
-    // 📏 Exponential thickness
-    float width = Mathf.Clamp(Mathf.Pow(absWeight, 0.9f) * 20f, 2f, 20f);
-
-    // ✨ Optional glow effect (pseudo-shadow)
-    Color glowColor = color with { A = color.A * 0.2f };
-    DrawLine(from + new Vector2(1, 1), to + new Vector2(1, 1), glowColor, width + 2f);
-
-    // 🔶 Main vibrant line
-    DrawLine(from, to, color, width);
-}
+    {
+        float absWeight = Mathf.Abs(weight);
+        // 🎨 Vibrant colors
+        Color color = weight > 0
+            ? new Color(0.2f, 1f, 0.2f) // Bright green
+            : new Color(1f, 0.2f, 0.2f); // Bright red
+        // 💡 Enhanced alpha and glow
+        color.A = Mathf.Clamp(Mathf.Pow(absWeight, 0.8f), 0.4f, 1f); // more nonlinear vividness
+        // 📏 Exponential thickness
+        float width = Mathf.Clamp(Mathf.Pow(absWeight, 0.9f) * 20f, 2f, 20f);
+        // ✨ Optional glow effect (pseudo-shadow)
+        Color glowColor = color with { A = color.A * 0.2f };
+        DrawLine(from + new Vector2(1, 1), to + new Vector2(1, 1), glowColor, width + 2f);
+        // 🔶 Main vibrant line
+        DrawLine(from, to, color, width);
+    }
 
 }

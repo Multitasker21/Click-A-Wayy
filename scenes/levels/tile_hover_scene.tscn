@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://dv86fwvf6qlt7"]
+[gd_scene load_steps=15 format=4 uid="uid://dv86fwvf6qlt7"]
 
 [ext_resource type="Script" uid="uid://b0wmjr020uejg" path="res://scenes/levels/TileHoverScene.cs" id="1_jmsp1"]
 [ext_resource type="Texture2D" uid="uid://t6uhtwn4wann" path="res://assets/tilesets/WallsOutline.png" id="2_jmsp1"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://c2r2l65elurer" path="res://scenes/player/player.tscn" id="9_53jq1"]
 [ext_resource type="Script" uid="uid://df1njekq4jknl" path="res://scenes/levels/NeuralVisualizer.cs" id="9_y5shd"]
 [ext_resource type="FontFile" uid="uid://h3i0erd3a5wi" path="res://assets/fonts/Square.ttf" id="11_tpvsj"]
+[ext_resource type="PackedScene" uid="uid://cw4kuxvitxnac" path="res://scenes/webcam/webcam_display.tscn" id="12_b5k0h"]
 
 [sub_resource type="Theme" id="Theme_vee43"]
 
@@ -68,6 +69,7 @@ offset_right = -4.0
 offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_use_anchors_ = true
 
 [node name="WallsOutline3" type="Sprite2D" parent="."]
 self_modulate = Color(25.414, 0.008, 0, 1)
@@ -85,6 +87,7 @@ offset_right = -4.0
 offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_use_anchors_ = true
 
 [node name="PlacableObstacle" type="Node2D" parent="."]
 
@@ -159,6 +162,9 @@ DrumSpriteTemplate = NodePath("../../../../PlacableObstacle/Drum")
 layout_mode = 2
 TileHoverScenePath = NodePath("../../../..")
 DrumSpriteTemplate = NodePath("../../../../PlacableObstacle/Statues")
+
+[node name="WebcamDisplay" parent="CanvasLayer" instance=ExtResource("12_b5k0h")]
+metadata/_edit_use_anchors_ = true
 
 [node name="Player" parent="." instance=ExtResource("9_53jq1")]
 position = Vector2(542, 331)

@@ -97,8 +97,8 @@ _data = {
 
 [node name="Drum" type="PanelContainer"]
 custom_minimum_size = Vector2(100, 100)
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 100.0
+offset_bottom = 100.0
 tooltip_text = "Drum"
 script = ExtResource("1_pake2")
 

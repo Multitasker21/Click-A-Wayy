@@ -44,37 +44,46 @@ public partial class WebcamReceiver : Node
     }
 
     private async void ConnectToPython()
+{
+    const int maxRetries = 10;
+    int retries = 0;
+
+    GD.Print("🔄 Attempting to connect to Python server at 127.0.0.1:5050");
+
+    while (retries < maxRetries)
     {
-        const int maxRetries = 10;
-        int retries = 0;
-
-        while (retries < maxRetries)
+        try
         {
-            try
-            {
-                _client = new TcpClient("127.0.0.1", 5050);
-                _stream = _client.GetStream();
-                GD.Print("Connected to Python server.");
-                break;
-            }
-            catch (SocketException)
-            {
-                GD.Print("Connection failed, retrying...");
-                retries++;
-                await ToSignal(GetTree().CreateTimer(0.5f), "timeout");
-            }
+            _client = new TcpClient("127.0.0.1", 5050);
+            _stream = _client.GetStream();
+            GD.Print("✅ Connected to Python server.");
+            break;
         }
-
-        if (_client == null || !_client.Connected)
+        catch (SocketException ex)
         {
-            GD.PrintErr("Failed to connect to Python server.");
-            return;
+            GD.PrintErr($"❌ Connection failed (attempt {retries + 1}/{maxRetries}): {ex.Message}");
+            GD.PrintErr($"📄 StackTrace: {ex.StackTrace}");
+            retries++;
+            await ToSignal(GetTree().CreateTimer(0.5f), "timeout");
         }
-
-        byte[] lengthBytes = new byte[4];
-
-        while (true)
+        catch (Exception ex)
         {
+            GD.PrintErr($"❗ Unexpected error during connection attempt: {ex.Message}");
+            GD.PrintErr($"📄 StackTrace: {ex.StackTrace}");
+            break;
+        }
+    }
+
+    if (_client == null || !_client.Connected)
+    {
+        GD.PrintErr("⛔ Final Result: Failed to connect to Python server after max retries.");
+        return;
+    }
+
+    byte[] lengthBytes = new byte[4];
+
+    while (true)
+    {
             if (_stream.Read(lengthBytes, 0, 4) != 4)
                 continue;
 
@@ -134,8 +143,10 @@ public partial class WebcamReceiver : Node
                 LandmarkDrawer?.UpdateMultipleHands(allHands);
             }
 
-
             await ToSignal(GetTree(), "process_frame");
         }
-    }
+        
+
+}
+
 }

@@ -31,7 +31,15 @@ public partial class WebcamReceiver : Node
             RedirectStandardError = false
         };
 
-        System.Diagnostics.Process.Start(startInfo);
+        try
+        {
+            System.Diagnostics.Process.Start(startInfo);
+            GD.Print("✅ Python process started: webcam.py");
+        }
+        catch (Exception e)
+        {
+            GD.PrintErr($"❌ Failed to start Python process: {e.Message}");
+        }
         ConnectToPython();
     }
 

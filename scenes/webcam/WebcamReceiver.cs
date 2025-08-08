@@ -22,88 +22,59 @@ public partial class WebcamReceiver : Node
         string pythonPath = ProjectSettings.GlobalizePath($"res://{pythonRelative}");
         string scriptPath = ProjectSettings.GlobalizePath($"res://{scriptRelative}");
         var startInfo = new System.Diagnostics.ProcessStartInfo
-{
-    FileName = pythonPath,
-    Arguments = scriptPath,
-    UseShellExecute = false,
-    RedirectStandardOutput = true,
-    RedirectStandardError = true,
-    CreateNoWindow = true
-};
-
-try
-{
-    var process = System.Diagnostics.Process.Start(startInfo);
-    GD.Print("✅ Python process started: webcam.py");
-
-    new System.Threading.Thread(() =>
-    {
-        using var reader = process.StandardOutput;
-        string line;
-        while ((line = reader.ReadLine()) != null)
         {
-            GD.Print("🐍 PYTHON: " + line);
-        }
-    }).Start();
+            FileName = pythonPath,
+            Arguments = scriptPath,
+            CreateNoWindow = false,
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
+        };
 
-    new System.Threading.Thread(() =>
-    {
-        using var errReader = process.StandardError;
-        string err;
-        while ((err = errReader.ReadLine()) != null)
+        try
         {
-            GD.PrintErr("❗ PYTHON ERROR: " + err);
+            System.Diagnostics.Process.Start(startInfo);
+            GD.Print("✅ Python process started: webcam.py");
         }
-    }).Start();
-}
-catch (Exception e)
-{
-    GD.PrintErr($"❌ Failed to start Python process: {e.Message}");
-}
+        catch (Exception e)
+        {
+            GD.PrintErr($"❌ Failed to start Python process: {e.Message}");
+        }
         ConnectToPython();
     }
 
     private async void ConnectToPython()
-{
-    const int maxRetries = 10;
-    int retries = 0;
-
-    GD.Print("🔄 Attempting to connect to Python server at 127.0.0.1:5050");
-
-    while (retries < maxRetries)
     {
-        try
-        {
-            _client = new TcpClient("127.0.0.1", 5050);
-            _stream = _client.GetStream();
-            GD.Print("✅ Connected to Python server.");
-            break;
-        }
-        catch (SocketException ex)
-        {
-            GD.PrintErr($"❌ Connection failed (attempt {retries + 1}/{maxRetries}): {ex.Message}");
-            GD.PrintErr($"📄 StackTrace: {ex.StackTrace}");
-            retries++;
-            await ToSignal(GetTree().CreateTimer(0.5f), "timeout");
-        }
-        catch (Exception ex)
-        {
-            GD.PrintErr($"❗ Unexpected error during connection attempt: {ex.Message}");
-            GD.PrintErr($"📄 StackTrace: {ex.StackTrace}");
-            break;
-        }
-    }
+        const int maxRetries = 10;
+        int retries = 0;
 
-    if (_client == null || !_client.Connected)
-    {
-        GD.PrintErr("⛔ Final Result: Failed to connect to Python server after max retries.");
-        return;
-    }
+        while (retries < maxRetries)
+        {
+            try
+            {
+                _client = new TcpClient("127.0.0.1", 5050);
+                _stream = _client.GetStream();
+                GD.Print("Connected to Python server.");
+                break;
+            }
+            catch (SocketException)
+            {
+                GD.Print("Connection failed, retrying...");
+                retries++;
+                await ToSignal(GetTree().CreateTimer(0.5f), "timeout");
+            }
+        }
 
-    byte[] lengthBytes = new byte[4];
+        if (_client == null || !_client.Connected)
+        {
+            GD.PrintErr("Failed to connect to Python server.");
+            return;
+        }
 
-    while (true)
-    {
+        byte[] lengthBytes = new byte[4];
+
+        while (true)
+        {
             if (_stream.Read(lengthBytes, 0, 4) != 4)
                 continue;
 
@@ -163,10 +134,8 @@ catch (Exception e)
                 LandmarkDrawer?.UpdateMultipleHands(allHands);
             }
 
+
             await ToSignal(GetTree(), "process_frame");
         }
-        
-
-}
-
+    }
 }

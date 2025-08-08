@@ -292,7 +292,7 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
         if (_activeDrum != null)
             _activeDrum.QueueFree();
 
-        _originalTemplate = template; // ✅ store original reference
+        _originalTemplate = template; // store original reference
         _activeDrum = _originalTemplate.Duplicate() as Sprite2D;
 
         _activeDrum.Visible = true;
@@ -318,8 +318,6 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
         Vector2I hovered = TileMapLayer.LocalToMap(TileMapLayer.GetLocalMousePosition());
         if (isPlacingDrum && _activeDrum != null && _activeFootprint.Count > 0)
         {
-            
-
             // Calculate center of the footprint
             Vector2 avg = Vector2.Zero;
             foreach (var offset in _activeFootprint)

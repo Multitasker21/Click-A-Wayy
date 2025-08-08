@@ -22,24 +22,44 @@ public partial class WebcamReceiver : Node
         string pythonPath = ProjectSettings.GlobalizePath($"res://{pythonRelative}");
         string scriptPath = ProjectSettings.GlobalizePath($"res://{scriptRelative}");
         var startInfo = new System.Diagnostics.ProcessStartInfo
-        {
-            FileName = pythonPath,
-            Arguments = scriptPath,
-            CreateNoWindow = false,
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true
-        };
+{
+    FileName = pythonPath,
+    Arguments = scriptPath,
+    UseShellExecute = false,
+    RedirectStandardOutput = true,
+    RedirectStandardError = true,
+    CreateNoWindow = true
+};
 
-        try
+try
+{
+    var process = System.Diagnostics.Process.Start(startInfo);
+    GD.Print("✅ Python process started: webcam.py");
+
+    new System.Threading.Thread(() =>
+    {
+        using var reader = process.StandardOutput;
+        string line;
+        while ((line = reader.ReadLine()) != null)
         {
-            System.Diagnostics.Process.Start(startInfo);
-            GD.Print("✅ Python process started: webcam.py");
+            GD.Print("🐍 PYTHON: " + line);
         }
-        catch (Exception e)
+    }).Start();
+
+    new System.Threading.Thread(() =>
+    {
+        using var errReader = process.StandardError;
+        string err;
+        while ((err = errReader.ReadLine()) != null)
         {
-            GD.PrintErr($"❌ Failed to start Python process: {e.Message}");
+            GD.PrintErr("❗ PYTHON ERROR: " + err);
         }
+    }).Start();
+}
+catch (Exception e)
+{
+    GD.PrintErr($"❌ Failed to start Python process: {e.Message}");
+}
         ConnectToPython();
     }
 

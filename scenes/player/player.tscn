@@ -122,7 +122,6 @@ frame_progress = 0.835797
 
 [node name="IntegratedAgent" type="NavigationAgent2D" parent="."]
 path_postprocessing = 1
-debug_enabled = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_gmlin")

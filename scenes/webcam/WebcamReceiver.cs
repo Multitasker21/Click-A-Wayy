@@ -27,8 +27,8 @@ public partial class WebcamReceiver : Node
             Arguments = scriptPath,
             CreateNoWindow = false,
             UseShellExecute = false,
-            RedirectStandardOutput = false,
-            RedirectStandardError = false
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
         };
 
         try

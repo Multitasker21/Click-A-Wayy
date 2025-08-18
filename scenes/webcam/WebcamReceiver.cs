@@ -27,8 +27,8 @@ public partial class WebcamReceiver : Node
             Arguments = scriptPath,
             CreateNoWindow = false,
             UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true
+            RedirectStandardOutput = false,
+            RedirectStandardError = false
         };
 
         try
@@ -41,6 +41,7 @@ public partial class WebcamReceiver : Node
             GD.PrintErr($"❌ Failed to start Python process: {e.Message}");
         }
         ConnectToPython();
+        
     }
 
     private async void ConnectToPython()
@@ -55,6 +56,7 @@ public partial class WebcamReceiver : Node
                 _client = new TcpClient("127.0.0.1", 5050);
                 _stream = _client.GetStream();
                 GD.Print("Connected to Python server.");
+                SendDisplaySize();
                 break;
             }
             catch (SocketException)
@@ -138,4 +140,31 @@ public partial class WebcamReceiver : Node
             await ToSignal(GetTree(), "process_frame");
         }
     }
+    private void SendDisplaySize()
+{
+    if (_stream == null) return;
+
+    int width = (int)DisplayRect.Size.X;
+    int height = (int)DisplayRect.Size.Y;
+
+    var sizeData = new Dictionary<string, object>
+    {
+        { "type", "resize" },
+        { "width", width },
+        { "height", height }
+    };
+
+    byte[] msg = MessagePackSerializer.Serialize(sizeData);
+
+    // send length (big endian)
+    byte[] lengthBytes = BitConverter.GetBytes(msg.Length);
+    Array.Reverse(lengthBytes);
+    _stream.Write(lengthBytes, 0, 4);
+
+    // send payload
+    _stream.Write(msg, 0, msg.Length);
+
+    GD.Print($"📩 Sent resize request: {width}x{height}");
+}
+
 }

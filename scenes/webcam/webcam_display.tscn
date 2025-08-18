@@ -16,9 +16,18 @@ GestureLabel = NodePath("Label")
 LandmarkDrawer = NodePath("WebcamDisplay/LandmarkRenderer")
 
 [node name="WebcamDisplay" type="TextureRect" parent="WebcamReceiver"]
-offset_right = 255.0
-offset_bottom = 167.0
+offset_right = 421.0
+offset_bottom = 301.0
 stretch_mode = 5
+
+[node name="ColorRect" type="ColorRect" parent="WebcamReceiver/WebcamDisplay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.527, 0.003, 0.903, 0.266)
 
 [node name="LandmarkRenderer" type="Control" parent="WebcamReceiver/WebcamDisplay"]
 layout_mode = 1

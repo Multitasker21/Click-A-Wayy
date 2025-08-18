@@ -8,12 +8,39 @@ import mediapipe as mp
 import util  # mostly using your get_angle() & get_distance() others are just taking dust now.. SOooowwwYYY
 import numpy as np
 import pyautogui
+import threading
 import time
 
 m.patch()
 
+# === Default CamFeed Size === #
+TARGET_WIDTH = 640
+TARGET_HEIGHT = 480
+
 # === CONFIG Flag for switching to local preview mode ===
 use_tkinter_preview = False  # <<< SET TO TRUE (preview only)
+
+# === Setup CLient Connection === #
+def listen_for_commands(sock):
+    global TARGET_WIDTH, TARGET_HEIGHT
+    try:
+        while True:
+            # Read 4-byte header
+            header = sock.recv(4)
+            if not header:
+                break
+            length = struct.unpack(">I", header)[0]
+            data = sock.recv(length)
+            if not data:
+                break
+
+            message = msgpack.unpackb(data, raw=False)
+            if message.get("type") == "resize":
+                TARGET_WIDTH = int(message["width"])
+                TARGET_HEIGHT = int(message["height"])
+                print(f"📩 Resize request: {TARGET_WIDTH}x{TARGET_HEIGHT}", flush=True)
+    except Exception as e:
+        print("⚠ Command listener error:", e, flush=True)
 
 # === Setuping a server ===
 if not use_tkinter_preview:
@@ -23,6 +50,8 @@ if not use_tkinter_preview:
     print("Waiting for connection...", flush=True)
     conn, _ = server.accept()
     print("Client connected!", flush=True)
+    # launch background thread
+    threading.Thread(target=listen_for_commands, args=(conn,), daemon=True).start()
 
 # === Camera Setp ===
 cap = cv2.VideoCapture(0)
@@ -41,11 +70,9 @@ hands = mp_hands.Hands(
 )
 draw = mp.solutions.drawing_utils
 
-
 # === Cursor Smoothing (Not that much good but works slightly better.. BY MY EXPERIENCEEEEE IDCCCC!!!! F*%k..UUUU!!!! IHATE.FING.PYYYYY) ===
 cursor_history = []
 history_length = 5  # Number of frames to average TF in!!
-
 
 # === Gesture Detectioner ===
 def detect_gesture(landmarks) -> tuple[str, tuple[float, float]]:
@@ -95,7 +122,6 @@ last_grab_state = False
 grab_debounce_time = 0.2  #secs
 last_grab_change_time = 0
 
-
 # === Main Loop ===
 while True:
     ret, frame = cap.read()
@@ -110,6 +136,9 @@ while True:
     all_hand_landmarks = []  # A List to hold all detected hands (how many hands u ask? BRUH we are humans we only have 2!!)
     landmark_points = []     # Scaled points for each hand (for Godot cutie)
     gesture = "None"
+
+    # ====== RESIZING before sending to Godot ======
+    frame = cv2.resize(frame, (TARGET_WIDTH, TARGET_HEIGHT))
 
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:

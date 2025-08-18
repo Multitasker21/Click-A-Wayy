@@ -526,6 +526,19 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
                         TileMapLayer.EraseCell(move.to);
                         TileMapLayer.SetCell(move.from, move.srcId, move.atlas);
                         GD.Print($"↩️ Undo: {move.to} → {move.from} (srcId: {move.srcId}, atlas: {move.atlas})");
+                        // ✅ If wall returned, erase nav at 'move.from'
+                        if (TileMapLayerNav.GetCellSourceId(move.from) != -1)
+                        {
+                            if (!_backupNavTiles.ContainsKey(move.from))
+                            {
+                                int navSrc = TileMapLayerNav.GetCellSourceId(move.from);
+                                Vector2I navAtlas = TileMapLayerNav.GetCellAtlasCoords(move.from);
+                                _backupNavTiles[move.from] = (navSrc, navAtlas);
+                            }
+
+                            TileMapLayerNav.EraseCell(move.from);
+                            GD.Print($"🧱 Undo: Re-blocked nav tile at {move.from} due to wall return.");
+                        }
                         if (_backupNavTiles.TryGetValue(move.to, out var navData))
                         {
                             TileMapLayerNav.SetCell(move.to, navData.srcId, navData.atlas);
@@ -606,7 +619,6 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
                         TileMapLayer.SetCell(move.to, move.srcId, move.atlas);
                         GD.Print($"🔁 Redo: {move.from} → {move.to} (srcId: {move.srcId}, atlas: {move.atlas})");
 
-                        // Remove nav tile if needed
                         if (TileMapLayerNav.GetCellSourceId(move.to) != -1)
                         {
                             if (!_backupNavTiles.ContainsKey(move.to))
@@ -617,7 +629,15 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
                             }
 
                             TileMapLayerNav.EraseCell(move.to);
-                            GD.Print($"🔁 Redo: Removed nav tile at {move.to} due to tile move.");
+                            GD.Print($"🔁 Redo: Re-blocked nav tile at {move.to} due to wall redo.");
+                        }
+
+                        // ✅ And restore nav at the old "from" cell if backup exists
+                        if (_backupNavTiles.TryGetValue(move.from, out var navData))
+                        {
+                            TileMapLayerNav.SetCell(move.from, navData.srcId, navData.atlas);
+                            _backupNavTiles.Remove(move.from);
+                            GD.Print($"🧭 Redo: Restored nav tile at {move.from} (after tile moved away again).");
                         }
                     }
 

@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://c5ebbk8pifn2g"]
+
+[ext_resource type="Texture2D" uid="uid://jcs421bnw32l" path="res://assets/ui/PNG/BtnExitNoOpacity.png" id="1_tayjm"]
+[ext_resource type="Texture2D" uid="uid://7ka3skv5xvqw" path="res://assets/ui/debugnode.png" id="2_6o27g"]
+[ext_resource type="Texture2D" uid="uid://b31dlduyefj5v" path="res://assets/ui/debugnodeoverlay.png" id="3_nvscw"]
+
+[node name="MarkerNode" type="Node2D"]
+
+[node name="BtnExitNoOpacity" type="Sprite2D" parent="."]
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("1_tayjm")
+
+[node name="Debugnode" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(0.005, 0.005)
+texture = ExtResource("2_6o27g")
+
+[node name="Debugnodeoverlay" type="Sprite2D" parent="."]
+position = Vector2(5.96046e-08, 5.96046e-08)
+scale = Vector2(0.005, 0.005)
+texture = ExtResource("3_nvscw")

@@ -1,8 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://c2r2l65elurer"]
+[gd_scene load_steps=20 format=3 uid="uid://c2r2l65elurer"]
 
 [ext_resource type="Texture2D" uid="uid://c5jjb0c1krb5c" path="res://assets/player/CatSitting.png" id="1_dovo2"]
 [ext_resource type="Script" uid="uid://b7kwqgy3c2cim" path="res://scenes/player/Player.cs" id="1_gmlin"]
 [ext_resource type="Texture2D" uid="uid://ca27tl82fgfi" path="res://assets/player/CatRunning.png" id="2_gmlin"]
+[ext_resource type="PackedScene" uid="uid://c5ebbk8pifn2g" path="res://scenes/player/marker_node.tscn" id="2_lvxji"]
+[ext_resource type="Script" uid="uid://dfkfs133v660p" path="res://scenes/player/IntegratedAgent.cs" id="4_p47bc"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lvxji"]
 atlas = ExtResource("1_dovo2")
@@ -122,6 +124,8 @@ frame_progress = 0.835797
 
 [node name="IntegratedAgent" type="NavigationAgent2D" parent="."]
 path_postprocessing = 1
+script = ExtResource("4_p47bc")
+MarkerScene = ExtResource("2_lvxji")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_gmlin")

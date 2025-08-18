@@ -1,8 +1,21 @@
-[gd_resource type="TileSet" load_steps=10 format=3 uid="uid://d14pcms5qm31n"]
+[gd_resource type="TileSet" load_steps=13 format=3 uid="uid://d14pcms5qm31n"]
 
+[ext_resource type="Texture2D" uid="uid://xvwbwxqmqy0q" path="res://assets/tilesets/Grassv1.png" id="1_0p40b"]
 [ext_resource type="Texture2D" uid="uid://b32s1b343b4kl" path="res://assets/tilesets/Walls.png" id="1_rt0pf"]
 [ext_resource type="Texture2D" uid="uid://b4es5xbwu5s75" path="res://assets/tilesets/Ground.png" id="2_rt0pf"]
 [ext_resource type="Texture2D" uid="uid://c8r2xycx5v7d2" path="res://assets/tilesets/Dungeon Tile Set.png" id="3_hv7vr"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_7p78f"]
+vertices = PackedVector2Array(4, 4, -4, 4, -4, -4, 4, -4)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)])
+agent_radius = 0.0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4l10e"]
+texture = ExtResource("1_0p40b")
+texture_region_size = Vector2i(8, 8)
+0:0/0 = 0
+0:0/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_7p78f")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jmsp1"]
 texture = ExtResource("1_rt0pf")
@@ -557,3 +570,4 @@ navigation_layer_0/layers = 1
 sources/1 = SubResource("TileSetAtlasSource_jmsp1")
 sources/2 = SubResource("TileSetAtlasSource_0p40b")
 sources/3 = SubResource("TileSetAtlasSource_7p78f")
+sources/0 = SubResource("TileSetAtlasSource_4l10e")

@@ -29,6 +29,9 @@ public partial class NeuralVisualizer : Control
     private Font _font;
     private const float NodeRadius = 10f;
 
+    // 👇 Adjustable padding (in pixels)
+    private const float Padding = 40f;
+
     public override void _Ready()
     {
         _font = CustomFont ?? ThemeDB.FallbackFont;
@@ -57,9 +60,18 @@ public partial class NeuralVisualizer : Control
         if (_inputActivations == null || _hiddenActivations == null || _outputQValues == null)
             return;
 
-        float vSpacing = 45f;
-        float layerSpacing = 240f;
-        Vector2 origin = new Vector2(100, 100);
+        // === Dynamic spacing with padding ===
+        float availableWidth = Size.X - 2 * Padding;
+        float availableHeight = Size.Y - 2 * Padding;
+
+        int maxNodes = Mathf.Max(_inputCount, Mathf.Max(_hiddenCount, _outputCount));
+
+        float vSpacing = maxNodes > 1 ? availableHeight / (maxNodes - 1) : availableHeight / 2f;
+
+        float layerSpacing = availableWidth / 2.5f;
+
+        // Start position adjusted by padding
+        Vector2 origin = new Vector2(Padding + layerSpacing * 0.3f, Padding);
         Vector2 labelOffset = new Vector2(20, 0);
 
         Vector2[] inputPos = new Vector2[_inputCount];
@@ -67,13 +79,15 @@ public partial class NeuralVisualizer : Control
         Vector2[] outputPos = new Vector2[_outputCount];
 
         for (int i = 0; i < _inputCount; i++)
-            inputPos[i] = origin + new Vector2(0, i * vSpacing);
-        for (int i = 0; i < _hiddenCount; i++)
-            hiddenPos[i] = origin + new Vector2(layerSpacing, i * vSpacing);
-        for (int i = 0; i < _outputCount; i++)
-            outputPos[i] = origin + new Vector2(2 * layerSpacing, i * vSpacing);
+            inputPos[i] = new Vector2(origin.X, Padding + (availableHeight - (_inputCount - 1) * vSpacing) / 2 + i * vSpacing);
 
-        // 1. Draw lines (behind everything)
+        for (int i = 0; i < _hiddenCount; i++)
+            hiddenPos[i] = new Vector2(origin.X + layerSpacing, Padding + (availableHeight - (_hiddenCount - 1) * vSpacing) / 2 + i * vSpacing);
+
+        for (int i = 0; i < _outputCount; i++)
+            outputPos[i] = new Vector2(origin.X + 2 * layerSpacing, Padding + (availableHeight - (_outputCount - 1) * vSpacing) / 2 + i * vSpacing);
+
+        // === Draw weights ===
         for (int i = 0; i < _inputCount; i++)
             for (int j = 0; j < _hiddenCount; j++)
                 DrawWeightedLine(inputPos[i], hiddenPos[j], _weightsInputHidden[i, j]);
@@ -82,7 +96,7 @@ public partial class NeuralVisualizer : Control
             for (int j = 0; j < _outputCount; j++)
                 DrawWeightedLine(hiddenPos[i], outputPos[j], _weightsHiddenOutput[i, j]);
 
-        // 2. Draw labels
+        // === Labels ===
         for (int i = 0; i < _inputCount; i++)
         {
             float val = Mathf.Clamp(_inputActivations[i], -1f, 1f);
@@ -103,7 +117,7 @@ public partial class NeuralVisualizer : Control
             DrawString(_font, outputPos[i] + labelOffset, $"{label}:{q:F2}", HorizontalAlignment.Left, -1, 15, Colors.Yellow);
         }
 
-        // 3. Draw awesome-looking nodes
+        // === Nodes ===
         for (int i = 0; i < _inputCount; i++)
         {
             float val = Mathf.Clamp(_inputActivations[i], -1f, 1f);
@@ -131,34 +145,29 @@ public partial class NeuralVisualizer : Control
     {
         float glowRadius = NodeRadius + 6f;
         Color glowColor = baseColor with { A = 0.15f };
-        DrawCircle(position, glowRadius, glowColor); // soft glow
+        DrawCircle(position, glowRadius, glowColor);
 
-        DrawCircle(position, NodeRadius, baseColor); // main node
+        DrawCircle(position, NodeRadius, baseColor);
 
         float innerRadius = NodeRadius * 0.4f;
         Color innerColor = baseColor.Inverted().Darkened(0.4f).Lightened(activation);
-        DrawCircle(position, innerRadius, innerColor); // center dot
+        DrawCircle(position, innerRadius, innerColor);
 
-        // Outline
         DrawArc(position, NodeRadius + 2f, 0, Mathf.Tau, 32, Colors.White with { A = 0.2f }, 1.5f);
     }
 
     private void DrawWeightedLine(Vector2 from, Vector2 to, float weight)
     {
         float absWeight = Mathf.Abs(weight);
-        // 🎨 Vibrant colors
-        Color color = weight > 0
-            ? new Color(0.2f, 1f, 0.2f) // Bright green
-            : new Color(1f, 0.2f, 0.2f); // Bright red
-        // 💡 Enhanced alpha and glow
-        color.A = Mathf.Clamp(Mathf.Pow(absWeight, 0.8f), 0.4f, 1f); // more nonlinear vividness
-        // 📏 Exponential thickness
+
+        Color color = weight > 0 ? new Color(0.2f, 1f, 0.2f) : new Color(1f, 0.2f, 0.2f);
+        color.A = Mathf.Clamp(Mathf.Pow(absWeight, 0.8f), 0.4f, 1f);
+
         float width = Mathf.Clamp(Mathf.Pow(absWeight, 0.9f) * 20f, 2f, 20f);
-        // ✨ Optional glow effect (pseudo-shadow)
+
         Color glowColor = color with { A = color.A * 0.2f };
         DrawLine(from + new Vector2(1, 1), to + new Vector2(1, 1), glowColor, width + 2f);
-        // 🔶 Main vibrant line
+
         DrawLine(from, to, color, width);
     }
-
 }

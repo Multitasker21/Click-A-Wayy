@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://dv86fwvf6qlt7"]
+[gd_scene load_steps=16 format=4 uid="uid://dv86fwvf6qlt7"]
 
 [ext_resource type="Script" uid="uid://b0wmjr020uejg" path="res://scenes/levels/TileHoverScene.cs" id="1_jmsp1"]
 [ext_resource type="Texture2D" uid="uid://t6uhtwn4wann" path="res://assets/tilesets/WallsOutline.png" id="2_jmsp1"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://b1qvdbpf6m6u" path="res://scenes/ui/icons/drum.tscn" id="4_vee43"]
 [ext_resource type="Texture2D" uid="uid://cxo0u4gs2vgqi" path="res://assets/objects/DrumBroken2.png" id="6_mijjg"]
 [ext_resource type="PackedScene" uid="uid://dydim6e3dckv5" path="res://scenes/ui/icons/churchcross.tscn" id="8_1jww8"]
+[ext_resource type="Texture2D" uid="uid://cnrkav72kdko2" path="res://assets/ui/PNG/Window04.png" id="8_wdtfu"]
 [ext_resource type="PackedScene" uid="uid://c2r2l65elurer" path="res://scenes/player/player.tscn" id="9_53jq1"]
 [ext_resource type="Script" uid="uid://df1njekq4jknl" path="res://scenes/levels/NeuralVisualizer.cs" id="9_y5shd"]
 [ext_resource type="FontFile" uid="uid://h3i0erd3a5wi" path="res://assets/fonts/Square.ttf" id="11_tpvsj"]
@@ -141,6 +142,16 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.81, 0.453, 1, 0.293)
 
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/NeuralVisualizer3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_wdtfu")
+region_rect = Rect2(5.70026, 3.2998, 675.385, 431.789)
+
 [node name="NeuralVisualizer" type="Control" parent="CanvasLayer"]
 custom_minimum_size = Vector2(500, 300)
 layout_mode = 3
@@ -183,6 +194,10 @@ TileHoverScenePath = NodePath("../../../..")
 DrumSpriteTemplate = NodePath("../../../../PlacableObstacle/Statues")
 
 [node name="WebcamDisplay" parent="CanvasLayer" instance=ExtResource("12_b5k0h")]
+offset_left = 1.0
+offset_top = 9.0
+offset_right = 1.0
+offset_bottom = 9.0
 metadata/_edit_use_anchors_ = true
 
 [node name="Player" parent="." instance=ExtResource("9_53jq1")]

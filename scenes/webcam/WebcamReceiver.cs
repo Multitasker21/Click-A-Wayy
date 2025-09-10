@@ -46,7 +46,7 @@ public partial class WebcamReceiver : Node
 
     private async void ConnectToPython()
     {
-        const int maxRetries = 10;
+        const int maxRetries = 50;
         int retries = 0;
 
         while (retries < maxRetries)

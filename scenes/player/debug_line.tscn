@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://digjfu7jry8sq"]
+
+[sub_resource type="Gradient" id="Gradient_0o854"]
+colors = PackedColorArray(1, 1, 1, 1, 0, 0.619376, 0.545529, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_eno6i"]
+gradient = SubResource("Gradient_0o854")
+use_hdr = true
+
+[node name="DebugLine" type="Line2D"]
+points = PackedVector2Array(22, 0, 0, 0)
+width = 0.5
+texture = SubResource("GradientTexture1D_eno6i")

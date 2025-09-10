@@ -285,7 +285,7 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
         }
 
         return footprint;
-    }
+    }       
 
     public void BeginPlacingObject(Sprite2D template, List<Vector2I>? footprintOverride = null)
     {

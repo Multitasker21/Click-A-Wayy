@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://cw4kuxvitxnac"]
+[gd_scene load_steps=6 format=3 uid="uid://cw4kuxvitxnac"]
 
 [ext_resource type="Script" uid="uid://btslepcjwl80g" path="res://scenes/webcam/WebcamReceiver.cs" id="1_jhmul"]
 [ext_resource type="Texture2D" uid="uid://y4kijscbw5q2" path="res://assets/ui/PNG/CellBig_01.png" id="2_4vxgy"]
 [ext_resource type="Script" uid="uid://dmf340jk86nf7" path="res://scenes/webcam/LandmarkRenderer.cs" id="2_uh8xo"]
+[ext_resource type="Texture2D" uid="uid://c3cg75sahtr3a" path="res://assets/ui/PNG/Window03.png" id="2_ur83i"]
 [ext_resource type="Texture2D" uid="uid://dgo14wopvwtmy" path="res://assets/ui/PNG/CellBig_02.png" id="3_uh8xo"]
 
 [node name="WebcamDisplay" type="Control"]
@@ -15,12 +16,22 @@ DisplayRect = NodePath("WebcamDisplay")
 GestureLabel = NodePath("Label")
 LandmarkDrawer = NodePath("WebcamDisplay/LandmarkRenderer")
 
+[node name="NinePatchRect" type="NinePatchRect" parent="WebcamReceiver"]
+offset_left = 1.0
+offset_top = -66.0
+offset_right = 452.0
+offset_bottom = 384.0
+texture = ExtResource("2_ur83i")
+
 [node name="WebcamDisplay" type="TextureRect" parent="WebcamReceiver"]
-offset_right = 421.0
-offset_bottom = 301.0
+offset_left = 16.0
+offset_top = 64.0
+offset_right = 437.0
+offset_bottom = 365.0
 stretch_mode = 5
 
 [node name="ColorRect" type="ColorRect" parent="WebcamReceiver/WebcamDisplay"]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,15 +45,17 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 2.0
+offset_right = -2.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_uh8xo")
 
 [node name="Label" type="Label" parent="WebcamReceiver"]
-offset_left = 6.0
-offset_top = 5.0
-offset_right = 46.0
-offset_bottom = 28.0
+offset_left = 43.0
+offset_top = 35.0
+offset_right = 83.0
+offset_bottom = 58.0
 
 [node name="CellBig01" type="Sprite2D" parent="."]
 position = Vector2(-268, -45)

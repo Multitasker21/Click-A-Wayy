@@ -11,54 +11,52 @@ public partial class WebcamReceiver : Node
     [Export] public Label GestureLabel; 
     [Export] public LandmarkRenderer LandmarkDrawer;
 
-
     private TcpClient _client;
     private NetworkStream _stream;
 
     public override void _Ready()
-{
-    // New path to bundled exe
-    string exeRelative = "bin/webcam.exe";
-    string exePath = ProjectSettings.GlobalizePath($"res://{exeRelative}");
-
-
-    var startInfo = new System.Diagnostics.ProcessStartInfo
     {
-        FileName = exePath,
-        CreateNoWindow = true,
-        UseShellExecute = false,
-        RedirectStandardOutput = true,
-        RedirectStandardError = true
-    };
+        // New path to bundled exe
+        string exeRelative = "bin/webcam.exe";
+        string exePath = ProjectSettings.GlobalizePath($"res://{exeRelative}");
 
-    try
-    {
-        var process = System.Diagnostics.Process.Start(startInfo);
-        GD.Print("✅ webcam.exe started!");
 
-        // Hook into stdout/stderr
-        process.OutputDataReceived += (s, e) => 
+        var startInfo = new System.Diagnostics.ProcessStartInfo
         {
-            if (!string.IsNullOrEmpty(e.Data))
-                GD.Print($"[PYTHON] {e.Data}");
-        };
-        process.ErrorDataReceived += (s, e) => 
-        {
-            if (!string.IsNullOrEmpty(e.Data))
-                GD.PrintErr($"[PYTHON ERROR] {e.Data}");
+            FileName = exePath,
+            CreateNoWindow = true,
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
         };
 
-        process.BeginOutputReadLine();
-        process.BeginErrorReadLine();
-    }
-    catch (Exception e)
-    {
-        GD.PrintErr($"❌ Failed to start webcam.exe: {e.Message}");
-    }
+        try
+        {
+            var process = System.Diagnostics.Process.Start(startInfo);
+            GD.Print("✅ webcam.exe started!");
 
-    ConnectToPython();
-}
+            // Hook into stdout/stderr
+            process.OutputDataReceived += (s, e) => 
+            {
+                if (!string.IsNullOrEmpty(e.Data))
+                    GD.Print($"[PYTHON] {e.Data}");
+            };
+            process.ErrorDataReceived += (s, e) => 
+            {
+                if (!string.IsNullOrEmpty(e.Data))
+                    GD.PrintErr($"[PYTHON ERROR] {e.Data}");
+            };
 
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+        }
+        catch (Exception e)
+        {
+            GD.PrintErr($"❌ Failed to start webcam.exe: {e.Message}");
+        }
+
+        ConnectToPython();
+    }
 
     private async void ConnectToPython()
     {
@@ -157,30 +155,30 @@ public partial class WebcamReceiver : Node
         }
     }
     private void SendDisplaySize()
-{
-    if (_stream == null) return;
-
-    int width = (int)DisplayRect.Size.X;
-    int height = (int)DisplayRect.Size.Y;
-
-    var sizeData = new Dictionary<string, object>
     {
-        { "type", "resize" },
-        { "width", width },
-        { "height", height }
-    };
+        if (_stream == null) return;
 
-    byte[] msg = MessagePackSerializer.Serialize(sizeData);
+        int width = (int)DisplayRect.Size.X;
+        int height = (int)DisplayRect.Size.Y;
 
-    // send length (big endian)
-    byte[] lengthBytes = BitConverter.GetBytes(msg.Length);
-    Array.Reverse(lengthBytes);
-    _stream.Write(lengthBytes, 0, 4);
+        var sizeData = new Dictionary<string, object>
+        {
+            { "type", "resize" },
+            { "width", width },
+            { "height", height }
+        };
 
-    // send payload
-    _stream.Write(msg, 0, msg.Length);
+        byte[] msg = MessagePackSerializer.Serialize(sizeData);
 
-    GD.Print($"📩 Sent resize request: {width}x{height}");
-}
+        // send length (big endian)
+        byte[] lengthBytes = BitConverter.GetBytes(msg.Length);
+        Array.Reverse(lengthBytes);
+        _stream.Write(lengthBytes, 0, 4);
+
+        // send payload
+        _stream.Write(msg, 0, msg.Length);
+
+        GD.Print($"📩 Sent resize request: {width}x{height}");
+    }
 
 }

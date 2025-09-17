@@ -1,0 +1,3 @@
+put webcam.exe in this folder manually..
+It will be provided to u by user, without it hand gesture access won't be provided...
+If not given to u contact Senior Dev Multi~ 

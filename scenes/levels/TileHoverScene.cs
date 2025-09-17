@@ -485,7 +485,7 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
         }
 
         TileMapLayerNav.EraseCell(target);
-        GD.Print($"🧱 Removed nav tile at {target} due to new obstacle.");
+        //GD.Print($"🧱 Removed nav tile at {target} due to new obstacle.");
     }
 }
 

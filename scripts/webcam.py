@@ -38,14 +38,14 @@ def listen_for_commands(sock):
             if message.get("type") == "resize":
                 TARGET_WIDTH = int(message["width"])
                 TARGET_HEIGHT = int(message["height"])
-                print(f"📩 Resize request: {TARGET_WIDTH}x{TARGET_HEIGHT}", flush=True)
+                print(f"Resize request: {TARGET_WIDTH}x{TARGET_HEIGHT}", flush=True)
     except Exception as e:
-        print("⚠ Command listener error:", e, flush=True)
+        print("Command listener error:", e, flush=True)
 
 # === Setuping a server ===
 if not use_tkinter_preview:
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(('127.0.0.1', 5050))
+    server.bind(('127.0.0.1', 5052))
     server.listen(1) #Easily Hackable but IDFC Bank!!!!
     print("Waiting for connection...", flush=True)
     conn, _ = server.accept()

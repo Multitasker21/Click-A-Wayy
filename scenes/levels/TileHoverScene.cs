@@ -157,7 +157,7 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
                             }
 
                             TileMapLayerNav.EraseCell(blockedCell);
-                            GD.Print($"🧱 Nav tile removed at {blockedCell} due to object placement.");
+                            //GD.Print($"🧱 Nav tile removed at {blockedCell} due to object placement.");
                         }
 
                         _occupiedObjectCells.Add(blockedCell);
@@ -209,7 +209,7 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
                     int srcId = TileMapLayer.GetCellSourceId(cell);
                     if (srcId == -1)
                     {
-                        GD.Print($"❌ Skipped invisible tile on single click: {cell}");
+                        //GD.Print($"❌ Skipped invisible tile on single click: {cell}");
                         return;
                     }
                     // Clear and select a new single cell

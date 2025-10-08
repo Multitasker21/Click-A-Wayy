@@ -46,6 +46,7 @@ tile_map_data = PackedByteArray("AAD6//3/AQAAAAAAAAD6//7/AQAAAAAAAAD6////AQAAAAA
 tile_set = ExtResource("2_vee43")
 
 [node name="TileMap" type="TileMap" parent="."]
+visible = false
 position = Vector2(576, 324)
 tile_set = ExtResource("2_vee43")
 format = 2
@@ -157,8 +158,8 @@ custom_minimum_size = Vector2(500, 300)
 layout_mode = 3
 anchor_left = 0.531
 anchor_right = 0.531
-offset_left = -309.52
-offset_right = 309.48
+offset_left = -309.52002
+offset_right = 309.47998
 offset_bottom = 410.0
 grow_horizontal = 2
 scale = Vector2(1, 0.68)

@@ -22,7 +22,7 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
     private Sprite2D _originalTemplate;
     private Sprite2D _activeDrum;
     private bool isPlacingDrum = false;
-    private List<Vector2I> _activeFootprint = new(); // Relative tile offsets from origin (hovered tile)
+    private List<Vector2I> _activeFootprint = new(); // Relative tile offsets from origin (hovered tile) 
     private enum UndoType { TileMove, ObjectPlace }
     private Stack<(UndoType type, object data)> undoHistory = new();
     private Stack<List<(Vector2I from, Vector2I to, int srcId, Vector2I atlas)>> undoStack = new();

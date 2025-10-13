@@ -1,0 +1,192 @@
+[gd_scene load_steps=19 format=3 uid="uid://cwblw5tx0x4kq"]
+
+[ext_resource type="Texture2D" uid="uid://y4kijscbw5q2" path="res://assets/ui/PNG/CellBig_01.png" id="1_2qsu2"]
+[ext_resource type="Texture2D" uid="uid://c43g1c8ecwd4l" path="res://assets/lights/circle.png" id="2_pmuto"]
+[ext_resource type="Texture2D" uid="uid://c56adxonk5do1" path="res://assets/objects/Collectibles/Gold.png" id="3_uhr3a"]
+
+[sub_resource type="Gradient" id="Gradient_bx1gh"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.056603774, 0.5, 1)
+colors = PackedColorArray(1.3911759, 1.1339706, 0, 0.24800001, 18.892157, 18.892157, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pfe2q"]
+gradient = SubResource("Gradient_bx1gh")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4tnq4"]
+lifetime_randomness = 1.0
+particle_flag_disable_z = true
+direction = Vector3(0, 0, 0)
+spread = 180.0
+flatness = 0.54
+initial_velocity_max = 10.0
+angular_velocity_min = -1.6093254e-05
+angular_velocity_max = -1.6093254e-05
+gravity = Vector3(0, 0, 0)
+damping_max = 1.5870001
+scale_min = 0.0
+scale_max = 0.0
+color = Color(1.353256, 1.353256, 0, 1)
+color_ramp = SubResource("GradientTexture1D_pfe2q")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xdp7v"]
+atlas = ExtResource("3_uhr3a")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fyfbr"]
+atlas = ExtResource("3_uhr3a")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cpd08"]
+atlas = ExtResource("3_uhr3a")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_56m5m"]
+atlas = ExtResource("3_uhr3a")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hgd6b"]
+atlas = ExtResource("3_uhr3a")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wqpsg"]
+atlas = ExtResource("3_uhr3a")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_acyei"]
+atlas = ExtResource("3_uhr3a")
+region = Rect2(96, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2c26q"]
+atlas = ExtResource("3_uhr3a")
+region = Rect2(112, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8qrx8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xdp7v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fyfbr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cpd08")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_56m5m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hgd6b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wqpsg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_acyei")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2c26q")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_enxaj"]
+resource_name = "Sparkle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [1.34, 2.83, 1.34]
+}
+
+[sub_resource type="Animation" id="Animation_uolug"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [2.83]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4n5p5"]
+_data = {
+&"RESET": SubResource("Animation_uolug"),
+&"Sparkle": SubResource("Animation_enxaj")
+}
+
+[node name="GoldIcon" type="Node2D"]
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+scale = Vector2(0.24999999, 0.24999999)
+color = Color(2.0325725, 2.0325725, 0, 1)
+energy = 2.83
+texture = ExtResource("2_pmuto")
+texture_scale = 0.05
+
+[node name="CellBig01" type="Sprite2D" parent="."]
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("1_2qsu2")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+self_modulate = Color(5.1329317, 5.1329317, 0, 0.712)
+position = Vector2(1, 1)
+scale = Vector2(0.5, 0.5)
+amount = 20
+texture = ExtResource("2_pmuto")
+lifetime = 1.56
+explosiveness = 1.0
+trail_lifetime = 1.56
+trail_sections = 2
+trail_section_subdivisions = 500
+process_material = SubResource("ParticleProcessMaterial_4tnq4")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(0.55, 0.55)
+sprite_frames = SubResource("SpriteFrames_8qrx8")
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(1.9999999, -0.99999994)
+scale = Vector2(0.35, 0.35)
+sprite_frames = SubResource("SpriteFrames_8qrx8")
+
+[node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="."]
+texture_filter = 3
+position = Vector2(1, 2)
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_8qrx8")
+
+[node name="Collected" type="GPUParticles2D" parent="."]
+visible = false
+self_modulate = Color(5.1329317, 5.1329317, 0, 0.712)
+scale = Vector2(0.5, 0.5)
+amount = 80
+texture = ExtResource("2_pmuto")
+lifetime = 1.56
+explosiveness = 1.0
+trail_lifetime = 1.56
+trail_sections = 2
+trail_section_subdivisions = 500
+process_material = SubResource("ParticleProcessMaterial_4tnq4")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_4n5p5")
+}
+autoplay = "Sparkle"

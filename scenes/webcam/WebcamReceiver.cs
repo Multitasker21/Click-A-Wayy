@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.IO;
 using MessagePack;
 using System.Collections.Generic;
+using System.Threading;
 
 public partial class WebcamReceiver : Node
 {
@@ -14,12 +15,16 @@ public partial class WebcamReceiver : Node
     private TcpClient _client;
     private NetworkStream _stream;
 
+    // Async worker + data buffer
+    private Thread _recvThread;
+    private readonly Queue<Dictionary<string, object>> _frameQueue = new();
+    private readonly object _queueLock = new();
+
     public override void _Ready()
     {
         // New path to bundled exe
         string exeRelative = "bin/webcam.exe";
         string exePath = ProjectSettings.GlobalizePath($"res://{exeRelative}");
-
 
         var startInfo = new System.Diagnostics.ProcessStartInfo
         {
@@ -35,13 +40,12 @@ public partial class WebcamReceiver : Node
             var process = System.Diagnostics.Process.Start(startInfo);
             GD.Print("✅ webcam.exe started!");
 
-            // Hook into stdout/stderr
-            process.OutputDataReceived += (s, e) => 
+            process.OutputDataReceived += (s, e) =>
             {
                 if (!string.IsNullOrEmpty(e.Data))
                     GD.Print($"[PYTHON] {e.Data}");
             };
-            process.ErrorDataReceived += (s, e) => 
+            process.ErrorDataReceived += (s, e) =>
             {
                 if (!string.IsNullOrEmpty(e.Data))
                     GD.PrintErr($"[PYTHON ERROR] {e.Data}");
@@ -87,37 +91,81 @@ public partial class WebcamReceiver : Node
             return;
         }
 
-        byte[] lengthBytes = new byte[4];
-
-        while (true)
+        // Launch background reader thread
+        _recvThread = new Thread(ReceiveLoop)
         {
-            if (_stream.Read(lengthBytes, 0, 4) != 4)
-                continue;
+            IsBackground = true
+        };
+        _recvThread.Start();
+    }
 
-            Array.Reverse(lengthBytes);
-            int length = BitConverter.ToInt32(lengthBytes, 0);
-            byte[] payload = new byte[length];
-            int read = 0;
+    private void ReceiveLoop()
+    {
+        try
+        {
+            var lengthBytes = new byte[4];
 
-            while (read < length)
-                read += _stream.Read(payload, read, length - read);
+            while (true)
+            {
+                int readLen = _stream.Read(lengthBytes, 0, 4);
+                if (readLen != 4)
+                    continue;
 
-            var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, object>>(payload);
+                Array.Reverse(lengthBytes);
+                int length = BitConverter.ToInt32(lengthBytes, 0);
+                byte[] payload = new byte[length];
+                int read = 0;
 
+                while (read < length)
+                    read += _stream.Read(payload, read, length - read);
+
+                var unpacked = MessagePackSerializer.Deserialize<Dictionary<string, object>>(payload);
+
+                lock (_queueLock)
+                {
+                    _frameQueue.Enqueue(unpacked);
+
+                    // prevent buildup if Godot lags
+                    if (_frameQueue.Count > 3)
+                        _frameQueue.Dequeue();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            GD.PrintErr($"Receiver thread error: {e}");
+        }
+    }
+
+    public override void _Process(double delta)
+    {
+        Dictionary<string, object> frame = null;
+
+        lock (_queueLock)
+        {
+            if (_frameQueue.Count > 0)
+                frame = _frameQueue.Dequeue();
+        }
+
+        if (frame == null)
+            return;
+
+        try
+        {
             // === Image ===
-            byte[] imgBytes = (byte[])unpacked["image"];
+            byte[] imgBytes = (byte[])frame["image"];
             var image = new Image();
             image.LoadJpgFromBuffer(imgBytes);
             var texture = ImageTexture.CreateFromImage(image);
             DisplayRect.Texture = texture;
 
             // === Gesture ===
-            string gesture = unpacked["gesture"].ToString();
+            string gesture = frame["gesture"].ToString();
             if (GestureLabel != null)
                 GestureLabel.Text = $"Gesture: {gesture}";
 
             // === Landmarks ===
-            if (unpacked.TryGetValue("landmarks", out object landmarkObj) && landmarkObj is object[] handArray)
+            if (frame.TryGetValue("landmarks", out object landmarkObj) && landmarkObj is object[] handArray)
             {
                 var allHands = new List<List<Vector2>>();
                 int imgW = image.GetWidth();
@@ -149,11 +197,13 @@ public partial class WebcamReceiver : Node
 
                 LandmarkDrawer?.UpdateMultipleHands(allHands);
             }
-
-
-            await ToSignal(GetTree(), "process_frame");
+        }
+        catch (Exception e)
+        {
+            GD.PrintErr($"Frame processing error: {e}");
         }
     }
+
     private void SendDisplaySize()
     {
         if (_stream == null) return;
@@ -170,15 +220,22 @@ public partial class WebcamReceiver : Node
 
         byte[] msg = MessagePackSerializer.Serialize(sizeData);
 
-        // send length (big endian)
         byte[] lengthBytes = BitConverter.GetBytes(msg.Length);
         Array.Reverse(lengthBytes);
         _stream.Write(lengthBytes, 0, 4);
-
-        // send payload
         _stream.Write(msg, 0, msg.Length);
 
         GD.Print($"📩 Sent resize request: {width}x{height}");
     }
 
+    public override void _ExitTree()
+    {
+        try
+        {
+            _recvThread?.Interrupt();
+            _stream?.Close();
+            _client?.Close();
+        }
+        catch { }
+    }
 }

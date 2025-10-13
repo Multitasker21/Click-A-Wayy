@@ -110,12 +110,14 @@ texture = ExtResource("1_n7eij")
 texture_scale = 0.03
 
 [node name="Drum" type="Sprite2D" parent="."]
+texture_filter = 1
 position = Vector2(48, 48)
 scale = Vector2(4, 4)
 texture = ExtResource("2_pake2")
 
 [node name="Outline" type="Sprite2D" parent="."]
 self_modulate = Color(2.5028e-06, 0.744232, 0.80902, 1)
+texture_filter = 1
 position = Vector2(50, 50)
 scale = Vector2(12, 12)
 texture = ExtResource("3_lpr6u")

@@ -18,7 +18,7 @@ TARGET_WIDTH = 640
 TARGET_HEIGHT = 480
 
 # === CONFIG Flag for switching to local preview mode ===
-use_tkinter_preview = True  # <<< SET TO TRUE (preview only)
+use_tkinter_preview = False  # <<< SET TO TRUE (preview only)
 
 # === Setup CLient Connection === #
 def listen_for_commands(sock):

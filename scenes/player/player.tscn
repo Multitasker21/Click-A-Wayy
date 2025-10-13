@@ -107,7 +107,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_gmlin"]
 radius = 3.0
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("RayCastUp", "RayCastDown", "RayCastLeft", "RayCastRight")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("RayCastUp", "RayCastDown", "RayCastLeft", "RayCastRight") groups=["Player"]]
 motion_mode = 1
 script = ExtResource("1_gmlin")
 NavAgentPath = NodePath("IntegratedAgent")

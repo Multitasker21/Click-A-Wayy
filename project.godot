@@ -14,6 +14,10 @@ config/name="Click A Wayy!!"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+globals="*res://globals/globals.cs"
+
 [display]
 
 window/size/viewport_width=1980
@@ -28,6 +32,10 @@ project/assembly_name="Click A Wayy!!"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/tileset_collision_generator_free_version/plugin.cfg")
+
+[global_group]
+
+Player=""
 
 [input]
 
@@ -58,4 +66,4 @@ common/physics_interpolation=true
 
 [rendering]
 
-textures/canvas_textures/default_texture_filter=0
+viewport/hdr_2d=true

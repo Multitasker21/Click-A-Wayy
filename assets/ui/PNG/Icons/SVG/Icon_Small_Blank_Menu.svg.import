@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ba78cgqxw7fg3"
-valid=false
+uid="uid://dd6itfprmfc7u"
+path="res://.godot/imported/Icon_Small_Blank_Menu.svg-a903f15b79c1f044c90828d4bb156d7c.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
-source_file="res://assets/ui/BlackGrid 3D.jpg"
+source_file="res://assets/ui/PNG/Icons/SVG/Icon_Small_Blank_Menu.svg"
+dest_files=["res://.godot/imported/Icon_Small_Blank_Menu.svg-a903f15b79c1f044c90828d4bb156d7c.ctex"]
 
 [params]
 
@@ -34,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

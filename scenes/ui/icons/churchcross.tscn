@@ -102,6 +102,7 @@ offset_bottom = 40.0
 script = ExtResource("3_scn35")
 
 [node name="Statues" type="Sprite2D" parent="."]
+texture_filter = 1
 position = Vector2(50, 48)
 scale = Vector2(2, 2)
 texture = ExtResource("2_ymirv")
@@ -115,6 +116,7 @@ texture_scale = 0.03
 
 [node name="Outline" type="Sprite2D" parent="."]
 self_modulate = Color(2.5028e-06, 0.744232, 0.80902, 1)
+texture_filter = 1
 position = Vector2(50, 50)
 scale = Vector2(12, 12)
 texture = ExtResource("3_16iue")

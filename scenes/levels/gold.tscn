@@ -1,0 +1,184 @@
+[gd_scene load_steps=20 format=3 uid="uid://7ehfumas08cb"]
+
+[ext_resource type="Script" uid="uid://qw0ll2j3wxdg" path="res://scenes/levels/Gold.cs" id="1_enxaj"]
+[ext_resource type="Texture2D" uid="uid://c43g1c8ecwd4l" path="res://assets/lights/circle.png" id="2_uolug"]
+[ext_resource type="Texture2D" uid="uid://c56adxonk5do1" path="res://assets/objects/Collectibles/Gold.png" id="3_4n5p5"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_uolug"]
+radius = 3.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xdp7v"]
+atlas = ExtResource("3_4n5p5")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fyfbr"]
+atlas = ExtResource("3_4n5p5")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cpd08"]
+atlas = ExtResource("3_4n5p5")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_56m5m"]
+atlas = ExtResource("3_4n5p5")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hgd6b"]
+atlas = ExtResource("3_4n5p5")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wqpsg"]
+atlas = ExtResource("3_4n5p5")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_acyei"]
+atlas = ExtResource("3_4n5p5")
+region = Rect2(96, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2c26q"]
+atlas = ExtResource("3_4n5p5")
+region = Rect2(112, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qxkci"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xdp7v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fyfbr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cpd08")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_56m5m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hgd6b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wqpsg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_acyei")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2c26q")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_ijj0j"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.056603774, 0.5, 1)
+colors = PackedColorArray(1.3911759, 1.1339706, 0, 0.24800001, 18.892157, 18.892157, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_enxaj"]
+gradient = SubResource("Gradient_ijj0j")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_eo2ok"]
+lifetime_randomness = 1.0
+particle_flag_disable_z = true
+direction = Vector3(0, 0, 0)
+spread = 180.0
+flatness = 0.54
+initial_velocity_max = 10.0
+angular_velocity_min = -1.6093254e-05
+angular_velocity_max = -1.6093254e-05
+gravity = Vector3(0, 0, 0)
+damping_max = 1.5870001
+scale_min = 0.0
+scale_max = 0.0
+color = Color(1.353256, 1.353256, 0, 1)
+color_ramp = SubResource("GradientTexture1D_enxaj")
+
+[sub_resource type="Animation" id="Animation_enxaj"]
+resource_name = "Sparkle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D/PointLight2D:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.51, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.5, 2.85, 0.5]
+}
+
+[sub_resource type="Animation" id="Animation_uolug"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D/PointLight2D:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.5]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_4n5p5"]
+_data = {
+&"RESET": SubResource("Animation_uolug"),
+&"Sparkle": SubResource("Animation_enxaj")
+}
+
+[node name="Gold" type="Node2D"]
+script = ExtResource("1_enxaj")
+
+[node name="Detector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Detector"]
+shape = SubResource("CircleShape2D_uolug")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(0.55, 0.55)
+sprite_frames = SubResource("SpriteFrames_qxkci")
+autoplay = "default"
+frame_progress = 0.621646
+
+[node name="PointLight2D" type="PointLight2D" parent="AnimatedSprite2D"]
+energy = 0.5
+texture = ExtResource("2_uolug")
+texture_scale = 0.02
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+self_modulate = Color(5.1329317, 5.1329317, 0, 0.712)
+scale = Vector2(0.5, 0.5)
+amount = 20
+texture = ExtResource("2_uolug")
+lifetime = 1.56
+explosiveness = 1.0
+trail_lifetime = 1.56
+trail_sections = 2
+trail_section_subdivisions = 500
+process_material = SubResource("ParticleProcessMaterial_eo2ok")
+
+[node name="Collected" type="GPUParticles2D" parent="."]
+visible = false
+self_modulate = Color(5.1329317, 5.1329317, 0, 0.712)
+scale = Vector2(0.5, 0.5)
+amount = 80
+texture = ExtResource("2_uolug")
+lifetime = 1.56
+explosiveness = 1.0
+trail_lifetime = 1.56
+trail_sections = 2
+trail_section_subdivisions = 500
+process_material = SubResource("ParticleProcessMaterial_eo2ok")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_4n5p5")
+}
+autoplay = "Sparkle"

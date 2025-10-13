@@ -6,13 +6,14 @@ public partial class TileHoverScene : Node2D
 {
     [Export] private TileMapLayer TileMapLayer;
     [Export] private TileMapLayer TileMapLayerNav; // Navigation layer
-private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new();
+    private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new();
 
     [Export] private TileMap TileMap;
     [Export] private Sprite2D HoverSpriteTemplate;
     [Export] private Sprite2D TargetSpriteTemplate;
     [Export] private Sprite2D BlockedSpriteTemplate;
     [Export] private Sprite2D Goal;
+    [Export] private Area2D PlaceableArea;
     private bool isDraggingGoal = false;
     private Vector2I goalOriginCell;
     private Vector2 goalStartGlobalPosition;
@@ -43,8 +44,10 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
     private bool isRightMouseHeld = false;
     private bool dragSelectionStarted = false;
 
+    private globals _globals;
     public override void _Ready()
     {
+        _globals = GetNode<globals>("/root/globals");
         _placableobstacle = GetNode<Node2D>("PlacableObstacle");
         _placableobstacle.Visible = false;
         HoverSpriteTemplate.Visible = false;
@@ -53,79 +56,158 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
         ScanAndBlockNavFromTileMapLayer();
     }
 
+    private bool IsInsidePlaceableArea(Vector2 globalPos)
+    {
+        if (PlaceableArea == null)
+            return true;
+
+        // Convert point to the Area2D's local space
+        Vector2 localPoint = PlaceableArea.ToLocal(globalPos);
+
+        foreach (Node child in PlaceableArea.GetChildren())
+        {
+            if (child is CollisionShape2D cs && cs.Shape != null)
+            {
+                // Use actual shape transforms (correct for offset/scale)
+                Transform2D shapeTransform = cs.Transform;
+                Vector2 shapeLocalPoint = shapeTransform.AffineInverse() * localPoint;
+
+                switch (cs.Shape)
+                {
+                    case RectangleShape2D rect:
+                        Rect2 rectBounds = new Rect2(-rect.Size / 2, rect.Size);
+                        if (rectBounds.HasPoint(shapeLocalPoint))
+                            return true;
+                        break;
+
+                    case CircleShape2D circle:
+                        if (shapeLocalPoint.Length() <= circle.Radius)
+                            return true;
+                        break;
+
+                    case CapsuleShape2D capsule:
+                        float halfHeight = capsule.Height / 2f;
+                        if (Mathf.Abs(shapeLocalPoint.Y) <= halfHeight &&
+                            shapeLocalPoint.Length() <= capsule.Radius)
+                            return true;
+                        break;
+                }
+            }
+        }
+
+        return false;
+    }
     public override void _Input(InputEvent e)
     {
         if (e is InputEventKey keyEvent && keyEvent.Pressed && !keyEvent.Echo)
         {
+            // 🔁 Undo / Redo logic
             if (keyEvent.Keycode == Key.Z && Input.IsKeyPressed(Key.Ctrl))
             {
                 UndoLastMove();
+                _globals.RegisterUndoRedo(); // 🧮 -5 score, +5 place count
                 return;
             }
             if (keyEvent.Keycode == Key.Y && Input.IsKeyPressed(Key.Ctrl))
             {
                 RedoLastMove();
+                _globals.RegisterUndoRedo(); // 🧮 -5 score, +5 place count
                 return;
             }
 
-        }        
+            // ❌ Cancel placement with X
+            if (keyEvent.Keycode == Key.X)
+            {
+                if (isPlacingDrum && _activeDrum != null)
+                {
+                    _activeDrum.QueueFree();
+                    _activeDrum = null;
+                    isPlacingDrum = false;
+                    _activeFootprint.Clear();
+                    targetSprites.ForEach(s => s.QueueFree());
+                    targetSprites.Clear();
+                    GD.Print("❌ Object placement canceled — can now hold a new one.");
+                }
+
+                if (isDraggingGoal)
+                {
+                    isDraggingGoal = false;
+                    Goal.GlobalPosition = goalStartGlobalPosition;
+                    GD.Print("❌ Goal movement canceled.");
+                }
+                return;
+            }
+        }
 
         if (e is InputEventMouseButton mouseBtn)
         {
             Vector2I cell = TileMapLayer.LocalToMap(TileMapLayer.GetLocalMousePosition());
+
+            // 🟣 Drag goal start
             if (mouseBtn.ButtonIndex == MouseButton.Left && mouseBtn.Pressed && !isPlacingDrum)
-        {
-            // If clicked on Goal, start dragging it
-            Vector2 globalClick = GetGlobalMousePosition();
-            if (Goal.GetRect().HasPoint(Goal.ToLocal(globalClick)))
             {
-                isDraggingGoal = true;
-                goalOriginCell = TileMapLayer.LocalToMap(TileMap.ToLocal(Goal.GlobalPosition));
-                goalStartGlobalPosition = Goal.GlobalPosition;
-                GD.Print("🎯 Goal picked up");
-                return;
-            }
-        }
-
-        if (mouseBtn.ButtonIndex == MouseButton.Left && !mouseBtn.Pressed && isDraggingGoal)
-        {    
-            // Check if placement is blocked
-            if (_occupiedObjectCells.Contains(cell) || TileMapLayer.GetCellSourceId(cell) != -1)
-            {
-                GD.Print("❌ Goal cannot be placed here — blocked.");
-                Goal.GlobalPosition = goalStartGlobalPosition;
-            }
-            else
-            {
-                Vector2 worldPos = TileMap.ToGlobal(TileMapLayer.MapToLocal(cell));
-                Goal.GlobalPosition = worldPos;
-
-                undoHistory.Push((UndoType.ObjectPlace, new GoalMoveData
+                Vector2 globalClick = GetGlobalMousePosition();
+                if (Goal.GetRect().HasPoint(Goal.ToLocal(globalClick)))
                 {
-                    FromCell = goalOriginCell,
-                    ToCell = cell,
-                    FromGlobalPos = goalStartGlobalPosition,
-                    ToGlobalPos = worldPos
-                }));
-
-                redoHistory.Clear();
-
-                GD.Print("✅ Goal placed.");
+                    isDraggingGoal = true;
+                    goalOriginCell = TileMapLayer.LocalToMap(TileMap.ToLocal(Goal.GlobalPosition));
+                    goalStartGlobalPosition = Goal.GlobalPosition;
+                    GD.Print("🎯 Goal picked up");
+                    return;
+                }
             }
 
-            isDraggingGoal = false;
-        }
+            // 🟣 Goal placement
+            if (mouseBtn.ButtonIndex == MouseButton.Left && !mouseBtn.Pressed && isDraggingGoal)
+            {
+                if (!IsInsidePlaceableArea(GetGlobalMousePosition()))
+                {
+                    GD.Print("❌ Goal cannot be placed outside PlaceableArea.");
+                    Goal.GlobalPosition = goalStartGlobalPosition;
+                    isDraggingGoal = false;
+                    return;
+                }
 
-        if (isPlacingDrum && _activeDrum != null)
+                if (_occupiedObjectCells.Contains(cell) || TileMapLayer.GetCellSourceId(cell) != -1)
+                {
+                    GD.Print("❌ Goal cannot be placed here — blocked.");
+                    Goal.GlobalPosition = goalStartGlobalPosition;
+                }
+                else
+                {
+                    Vector2 worldPos = TileMap.ToGlobal(TileMapLayer.MapToLocal(cell));
+                    Goal.GlobalPosition = worldPos;
+
+                    undoHistory.Push((UndoType.ObjectPlace, new GoalMoveData
+                    {
+                        FromCell = goalOriginCell,
+                        ToCell = cell,
+                        FromGlobalPos = goalStartGlobalPosition,
+                        ToGlobalPos = worldPos
+                    }));
+
+                    redoHistory.Clear();
+
+                    GD.Print("✅ Goal placed.");
+                }
+                isDraggingGoal = false;
+            }
+
+            // 🟠 Object placement
+            if (isPlacingDrum && _activeDrum != null)
             {
                 if (mouseBtn.ButtonIndex == MouseButton.Left && mouseBtn.Pressed)
                 {
-                    // Check if any cell is blocked
+                    if (!IsInsidePlaceableArea(_activeDrum.GlobalPosition))
+                    {
+                        GD.Print("❌ Cannot place: Outside Placeable Area.");
+                        return;
+                    }
+
                     bool blocked = false;
                     foreach (Vector2I offset in _activeFootprint)
                     {
                         Vector2I checkCell = cell + offset;
-
                         bool blockedByTile = TileMapLayer.GetCellSourceId(checkCell) != -1;
                         bool blockedByObject = _occupiedObjectCells.Contains(checkCell);
 
@@ -142,7 +224,6 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
                         return;
                     }
 
-                    // ✅ Safe to place: now update nav tiles + occupied cells
                     foreach (Vector2I offset in _activeFootprint)
                     {
                         Vector2I blockedCell = cell + offset;
@@ -155,15 +236,11 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
                                 Vector2I navAtlas = TileMapLayerNav.GetCellAtlasCoords(blockedCell);
                                 _backupNavTiles[blockedCell] = (navSrc, navAtlas);
                             }
-
                             TileMapLayerNav.EraseCell(blockedCell);
-                            //GD.Print($"🧱 Nav tile removed at {blockedCell} due to object placement.");
                         }
-
                         _occupiedObjectCells.Add(blockedCell);
                     }
 
-                    // Finish placement
                     Vector2 avgOffset = Vector2.Zero;
                     foreach (var offset in _activeFootprint)
                         avgOffset += offset;
@@ -171,8 +248,6 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
 
                     Vector2 worldPos = TileMapLayer.MapToLocal(cell) + (_tileSize * avgOffset);
                     _activeDrum.GlobalPosition = TileMap.ToGlobal(worldPos);
-
-                    Vector2I originCell = TileMapLayer.LocalToMap(TileMap.ToLocal(worldPos) - (_tileSize * avgOffset));
 
                     undoHistory.Push((UndoType.ObjectPlace, new ObjectPlaceData
                     {
@@ -189,12 +264,12 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
                     targetSprites.Clear();
 
                     GD.Print("✅ Drum placed.");
+                    _globals.RegisterObjectPlacement(1); // 🧮 -15 score, +15 place count
                     return;
                 }
             }
 
-
-            // LEFT CLICK → Single select or place
+            // 🟢 Tile (wall/brick) placement logic
             if (mouseBtn.ButtonIndex == MouseButton.Left)
             {
                 if (mouseBtn.Pressed)
@@ -202,17 +277,16 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
                     if (selectedCells.Count > 0 && isDragging)
                     {
                         GD.Print("Placing tiles...");
+                        int brickCount = selectedCells.Count;
                         PlaceTiles();
+                        _globals.RegisterBrickMove(brickCount); // 🧮 -1 × brickCount
                         return;
                     }
-                    // Restrict to only visible tiles (non-empty)
+
                     int srcId = TileMapLayer.GetCellSourceId(cell);
                     if (srcId == -1)
-                    {
-                        //GD.Print($"❌ Skipped invisible tile on single click: {cell}");
                         return;
-                    }
-                    // Clear and select a new single cell
+
                     selectedCells.Clear();
                     selectedCells.Add(cell);
                     isDragging = true;
@@ -221,40 +295,33 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
                 }
             }
 
-            // RIGHT CLICK → Start or stop drag-selection
+            // 🖱️ Right-click drag select
             if (mouseBtn.ButtonIndex == MouseButton.Right)
-{
-    isRightMouseHeld = mouseBtn.Pressed;
+            {
+                isRightMouseHeld = mouseBtn.Pressed;
 
-    if (mouseBtn.Pressed)
-    {
-        int srcId = TileMapLayer.GetCellSourceId(cell);
-
-        if (srcId != -1 && !selectedCells.Contains(cell))
-        {
-            selectedCells.Add(cell);
-            dragSelectionStarted = true;
-            UpdateHoverSprites();
-            GD.Print($"Started drag-selection with: {cell}");
-        }
-        else
-        {
-            GD.Print($"❌ Ignored ghost tile on right-click: {cell}");
+                if (mouseBtn.Pressed)
+                {
+                    int srcId = TileMapLayer.GetCellSourceId(cell);
+                    if (srcId != -1 && !selectedCells.Contains(cell))
+                    {
+                        selectedCells.Add(cell);
+                        dragSelectionStarted = true;
+                        UpdateHoverSprites();
+                        GD.Print($"Started drag-selection with: {cell}");
+                    }
+                }
+                else if (dragSelectionStarted)
+                {
+                    isDragging = true;
+                    dragSelectionStarted = false;
+                    GD.Print("Multi-select drag started");
+                }
+            }
         }
     }
-    else // Right released
-    {
-        if (dragSelectionStarted)
-        {
-            isDragging = true;
-            dragSelectionStarted = false;
-            GD.Print("Multi-select drag started");
-        }
-    }
-}
 
-        }
-    }
+
     public static List<Vector2I> GetFootprintFromTexture(Texture2D texture, Vector2 tileSize, float alphaThreshold = 0.1f)
     {
         List<Vector2I> footprint = new();
@@ -504,6 +571,8 @@ private Dictionary<Vector2I, (int srcId, Vector2I atlas)> _backupNavTiles = new(
         isDragging = false;
         currentOffset = Vector2I.Zero;
     }
+
+    
     private void UndoLastMove()
     {
         if (undoHistory.Count == 0)

@@ -4,7 +4,7 @@ import numpy as np
 import time
 import util 
 import pyautogui
-import random # BRUHHHHH GO TO LINE 108 right now U madda$&!!!#$@%!@!!!
+import random # 
 
 # Screen size
 screen_width, screen_height = pyautogui.size()

@@ -2,10 +2,10 @@
 import cv2
 import socket
 import msgpack
-import msgpack_numpy as m # main juice for our collab.. u could even say it is our MVL (MOST VALUABLE LIB)
+import msgpack_numpy as m 
 import struct 
 import mediapipe as mp
-import util  # mostly using your get_angle() & get_distance() others are just taking dust now.. SOooowwwYYY
+import util  # mostly using your get_angle() & get_distance()
 import numpy as np
 import pyautogui
 import threading
@@ -46,7 +46,7 @@ def listen_for_commands(sock):
 if not use_tkinter_preview:
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind(('127.0.0.1', 5052))
-    server.listen(1) #Easily Hackable but IDFC Bank!!!!
+    server.listen(1) 
     print("Waiting for connection...", flush=True)
     conn, _ = server.accept()
     print("Client connected!", flush=True)
@@ -70,7 +70,7 @@ hands = mp_hands.Hands(
 )
 draw = mp.solutions.drawing_utils
 
-# === Cursor Smoothing (Not that much good but works slightly better.. BY MY EXPERIENCEEEEE IDCCCC!!!! F*%k..UUUU!!!! IHATE.FING.PYYYYY) ===
+# === Cursor Smoothing ===
 cursor_history = []
 history_length = 5  # Number of frames to average TF in!!
 
@@ -128,13 +128,13 @@ while True:
     if not ret:
         continue
 
-    # Flip and convert color space (direct copypaste from your code)
+    # Flip and convert color space 
     frame = cv2.flip(frame, 1)
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = hands.process(frame_rgb)
 
-    all_hand_landmarks = []  # A List to hold all detected hands (how many hands u ask? BRUH we are humans we only have 2!!)
-    landmark_points = []     # Scaled points for each hand (for Godot cutie)
+    all_hand_landmarks = []  # A List to hold all detected hands 
+    landmark_points = []     # Scaled points for each hand 
     gesture = "None"
 
     # ====== RESIZING before sending to Godot ======
@@ -206,7 +206,7 @@ while True:
             break
         continue
 
-    # Encode frame to JPEG (Lighter and easier to bitmash thatswhy)
+    # Encode frame to JPEG (Lighter and easier)
     _, buffer = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 40])
 
     # Sends frame + landmarks to Godot

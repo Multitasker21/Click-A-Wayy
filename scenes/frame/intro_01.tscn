@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://qqq2lvykhiaf"]
+
+[ext_resource type="Shader" uid="uid://bk2xrigqcjjnr" path="res://scenes/frame/intro_01.gdshader" id="1_6i635"]
+[ext_resource type="VideoStream" uid="uid://do3dbmugqdeec" path="res://assets/ui/videos/Intro 4 [53D8D85].mp4" id="1_62o46"]
+[ext_resource type="Script" uid="uid://c083ej1oex8cf" path="res://scenes/frame/Intro_01.cs" id="1_sadnb"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sadnb"]
+shader = ExtResource("1_6i635")
+shader_parameter/gamma = 2.2
+
+[node name="Intro_01" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sadnb")
+
+[node name="Intro_01" type="VideoStreamPlayer" parent="."]
+material = SubResource("ShaderMaterial_sadnb")
+layout_mode = 1
+offset_right = 1920.0
+offset_bottom = 1088.0
+scale = Vector2(1.035, 1)
+stream = ExtResource("1_62o46")
+autoplay = true

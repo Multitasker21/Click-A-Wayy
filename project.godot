@@ -11,12 +11,13 @@ config_version=5
 [application]
 
 config/name="Click A Wayy!!"
-config/features=PackedStringArray("4.5", "C#", "Forward Plus")
+config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 globals="*res://globals/globals.cs"
+TransitionLayer="*res://globals/transition_layer.tscn"
 
 [display]
 

@@ -1,0 +1,92 @@
+[gd_scene load_steps=9 format=3 uid="uid://dsinkvepn0uag"]
+
+[ext_resource type="VideoStream" uid="uid://b8tk56ujvu8gt" path="res://assets/ui/videos/Intro_02_ClickMEEE.mp4" id="1_70xsa"]
+[ext_resource type="Script" uid="uid://u8saqt33wiq6" path="res://scenes/frame/Intro02.cs" id="1_h1qhy"]
+[ext_resource type="Shader" uid="uid://bykyhjpajktou" path="res://scenes/frame/intro_02.gdshader" id="1_xjedk"]
+[ext_resource type="Texture2D" uid="uid://dsnsct60hdrs5" path="res://assets/ui/videos/Looper.jpg" id="4_4a3tt"]
+[ext_resource type="VideoStream" uid="uid://cgga4iyl4ynyf" path="res://assets/ui/videos/Intro_03_Clicked.mp4" id="5_koeda"]
+[ext_resource type="Script" uid="uid://cb4ih2oapbllp" path="res://scenes/frame/CircularProgressBar.cs" id="5_wxnvw"]
+[ext_resource type="FontFile" uid="uid://h3i0erd3a5wi" path="res://assets/fonts/Square.ttf" id="6_enhll"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xjedk"]
+shader = ExtResource("1_xjedk")
+shader_parameter/gamma = 2.2
+
+[node name="intro_02" type="Control" node_paths=PackedStringArray("VideoPlayerNode", "CompletionVideoNode", "CircularProgressBarNode", "ProgressLabel")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_h1qhy")
+VideoPlayerNode = NodePath("Intro_02_ClickMe")
+CompletionVideoNode = NodePath("Intro_03_Clicked")
+CircularProgressBarNode = NodePath("CircularProgressBar")
+ProgressLabel = NodePath("ProgressLabel")
+
+[node name="Bg" type="BoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Looper" type="Sprite2D" parent="Bg"]
+position = Vector2(989, 541)
+scale = Vector2(1.55, 1.54167)
+texture = ExtResource("4_4a3tt")
+
+[node name="Intro_02_ClickMe" type="VideoStreamPlayer" parent="."]
+material = SubResource("ShaderMaterial_xjedk")
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(1.035, 1)
+stream = ExtResource("1_70xsa")
+autoplay = true
+
+[node name="Intro_03_Clicked" type="VideoStreamPlayer" parent="."]
+material = SubResource("ShaderMaterial_xjedk")
+offset_right = 1920.0
+offset_bottom = 1088.0
+scale = Vector2(1.035, 1)
+stream = ExtResource("5_koeda")
+
+[node name="CircularProgressBar" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5_wxnvw")
+FillColor = Color(0.0784314, 0.607843, 0.556863, 1)
+OuterRadius = 90.0
+InnerRadius = 85.0
+ArcPoints = 128
+
+[node name="ProgressLabel" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -376.0
+offset_top = -21.0
+offset_right = 376.0
+offset_bottom = 49.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/normal_font = ExtResource("6_enhll")
+theme_override_font_sizes/normal_font_size = 46
+bbcode_enabled = true
+text = "[center] 0%[/center]"

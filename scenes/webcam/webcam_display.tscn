@@ -17,7 +17,7 @@ GestureLabel = NodePath("Label")
 LandmarkDrawer = NodePath("WebcamDisplay/LandmarkRenderer")
 
 [node name="NinePatchRect" type="NinePatchRect" parent="WebcamReceiver"]
-self_modulate = Color(0, 1.224127, 0.8062448, 1)
+self_modulate = Color(0, 1.22413, 0.806245, 1)
 offset_left = 1.0
 offset_top = -66.0
 offset_right = 452.0

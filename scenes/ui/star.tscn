@@ -10,7 +10,7 @@ anchors_preset = 0
 script = ExtResource("1_dkrr3")
 
 [node name="Empty Star" type="Sprite2D" parent="."]
-self_modulate = Color(0.4240118, 0.703732, 0.6126055, 1)
+self_modulate = Color(0.424012, 0.703732, 0.612606, 1)
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("1_u22r1")
 

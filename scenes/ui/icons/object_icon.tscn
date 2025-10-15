@@ -18,7 +18,7 @@ tracks/0/path = NodePath("Walls:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 2.5333333, 4.9666667),
+"times": PackedFloat32Array(0, 2.53333, 4.96667),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector2(1, -2), Vector2(1, -3), Vector2(1, -2)]
@@ -33,7 +33,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 2.55, 5),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [-0.5235988, -3.0368729, -0.5235988]
+"values": [-0.523599, -3.03687, -0.523599]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -45,7 +45,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0, 2.55, 5),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [0.64751714, -2.083923, 0.64751714]
+"values": [0.647517, -2.08392, 0.647517]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -57,7 +57,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0.01, 2.56, 5),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(0.99999976, -0.99999994), Vector2(1, -1.9999999), Vector2(0.99999976, -0.99999994)]
+"values": [Vector2(1, -1), Vector2(1, -2), Vector2(1, -1)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -69,7 +69,7 @@ tracks/4/keys = {
 "times": PackedFloat32Array(0, 2.55, 5),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(-0.9999999, -2.3841858e-07), Vector2(-2, 0.9999999), Vector2(-0.9999999, -2.3841858e-07)]
+"values": [Vector2(-1, -2.38419e-07), Vector2(-2, 1), Vector2(-1, -2.38419e-07)]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -81,7 +81,7 @@ tracks/5/keys = {
 "times": PackedFloat32Array(0, 2.58, 5),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [-0.5235988, 0.75049156, -0.5235988]
+"values": [-0.523599, 0.750492, -0.523599]
 }
 tracks/6/type = "value"
 tracks/6/imported = false
@@ -90,7 +90,7 @@ tracks/6/path = NodePath("Drum:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0, 2.53, 5.0333333),
+"times": PackedFloat32Array(0, 2.53, 5.03333),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector2(1, 1), Vector2(1, 2), Vector2(1, 1)]
@@ -132,7 +132,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [-0.5235988]
+"values": [-0.523599]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -144,7 +144,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [0.64751714]
+"values": [0.647517]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -156,7 +156,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(0.99999976, -0.99999994)]
+"values": [Vector2(1, -1)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -168,7 +168,7 @@ tracks/4/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(-0.9999999, -2.3841858e-07)]
+"values": [Vector2(-1, -2.38419e-07)]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -180,7 +180,7 @@ tracks/5/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [-0.5235988]
+"values": [-0.523599]
 }
 tracks/6/type = "value"
 tracks/6/imported = false
@@ -216,55 +216,55 @@ _data = {
 [node name="ObjectIcon" type="Node2D"]
 
 [node name="CellBig02" type="Sprite2D" parent="."]
-self_modulate = Color(1.7103847, 1.3891217, 0.6564091, 1)
+self_modulate = Color(1.71038, 1.38912, 0.656409, 1)
 scale = Vector2(0.05, 0.05)
 texture = ExtResource("1_xtqcl")
 
 [node name="Drum" type="Sprite2D" parent="."]
 texture_filter = 1
 position = Vector2(1, 1)
-scale = Vector2(0.19000153, 0.1899997)
+scale = Vector2(0.190002, 0.19)
 texture = ExtResource("2_h0l6j")
 
 [node name="Drum2" type="Sprite2D" parent="."]
 texture_filter = 1
 position = Vector2(-1, 2)
-scale = Vector2(0.19000153, 0.1899997)
+scale = Vector2(0.190002, 0.19)
 texture = ExtResource("2_h0l6j")
 
 [node name="Walls" type="Sprite2D" parent="."]
-self_modulate = Color(1, 0.5917481, 1, 1)
+self_modulate = Color(1, 0.591748, 1, 1)
 texture_filter = 1
 position = Vector2(1, -2)
-rotation = 0.64751714
-scale = Vector2(0.19000153, 0.1899997)
+rotation = 0.647517
+scale = Vector2(0.190002, 0.19)
 texture = ExtResource("3_b71wr")
 
 [node name="Walls2" type="Sprite2D" parent="."]
-self_modulate = Color(1, 0.5917481, 1, 1)
+self_modulate = Color(1, 0.591748, 1, 1)
 texture_filter = 1
-position = Vector2(-0.9999999, -2.3841858e-07)
-rotation = -0.5235988
-scale = Vector2(0.1266677, 0.12666647)
+position = Vector2(-1, -2.38419e-07)
+rotation = -0.523599
+scale = Vector2(0.126668, 0.126666)
 texture = ExtResource("3_b71wr")
 
 [node name="Walls3" type="Sprite2D" parent="."]
-self_modulate = Color(1, 0.5917481, 1, 1)
+self_modulate = Color(1, 0.591748, 1, 1)
 texture_filter = 1
-position = Vector2(0.99999976, -0.99999994)
-rotation = -0.5235988
-scale = Vector2(0.1266677, 0.12666646)
+position = Vector2(1, -1)
+rotation = -0.523599
+scale = Vector2(0.126668, 0.126666)
 texture = ExtResource("3_b71wr")
 
 [node name="Statues" type="Sprite2D" parent="."]
 texture_filter = 1
-position = Vector2(-0.030727386, 0.04837036)
-scale = Vector2(0.19000153, 0.1899997)
+position = Vector2(-0.0307274, 0.0483704)
+scale = Vector2(0.190002, 0.19)
 texture = ExtResource("4_djnln")
 
 [node name="WallsOutline" type="Sprite2D" parent="."]
 visible = false
-self_modulate = Color(0, 1.4164544, 0.4366266, 1)
+self_modulate = Color(0, 1.41645, 0.436627, 1)
 texture_filter = 1
 position = Vector2(-1, 0)
 scale = Vector2(0.15, 0.15)
@@ -277,7 +277,7 @@ libraries = {
 autoplay = "ANim"
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
-scale = Vector2(0.24999999, 0.24999999)
-energy = 2.6880164
+scale = Vector2(0.25, 0.25)
+energy = 2.68802
 texture = ExtResource("6_0hiny")
 texture_scale = 0.05
